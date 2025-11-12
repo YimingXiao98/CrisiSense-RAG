@@ -13,30 +13,9 @@ from .utils_geo import to_h3
 
 
 def _parse_datetime(value: str) -> datetime:
-    """Parse various timestamp formats produced by partner exports."""
-
-    if not value:
-        raise ValueError("Missing datetime value")
-    value = value.strip()
-
-    try:
-        return datetime.fromisoformat(value)
-    except ValueError:
-        pass
-
-    formats = [
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%d %H:%M",
-        "%Y/%m/%d %H:%M:%S",
-        "%Y/%m/%d %H:%M",
-    ]
-    for fmt in formats:
-        try:
-            return datetime.strptime(value, fmt)
-        except ValueError:
-            continue
-    raise ValueError(f"Unrecognized datetime format: {value}")
-
+    dt = datetime.fromisoformat(value) if "T" in value else datetime.strptime(
+        value, "%Y-%m-%d %H:%M:%S")
+    return dt
 
 
 def _normalize_common(records: List[dict], lat_key: str | None, lon_key: str | None) -> List[dict]:
@@ -128,7 +107,8 @@ def load_roads(input_path: Path) -> List[dict]:
     logger.info("Loading road status", path=input_path)
     records = _read_csv(input_path)
     for record in records:
-        record["start_time"] = _parse_datetime(record["start_time"]).isoformat()
+        record["start_time"] = _parse_datetime(
+            record["start_time"]).isoformat()
         end_time = record.get("end_time")
         if end_time:
             record["end_time"] = _parse_datetime(end_time).isoformat()
