@@ -19,6 +19,12 @@ router = APIRouter(prefix="", tags=["query"])
 async def query_endpoint(payload: RAGQuery, request: Request, settings: Settings = SettingsDep) -> Dict[str, Any]:
     """Handle RAG inference request."""
 
+    return run_rag_pipeline(payload, request)
+
+
+def run_rag_pipeline(payload: RAGQuery, request: Request) -> Dict[str, Any]:
+    """Execute the retrieval + inference pipeline for a structured RAG query."""
+
     retriever = request.app.state.retriever
     vlm_client = request.app.state.vlm_client
     result = retriever.retrieve(payload)

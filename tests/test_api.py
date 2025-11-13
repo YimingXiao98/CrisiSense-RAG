@@ -1,4 +1,3 @@
-from datetime import date
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -31,3 +30,21 @@ def test_query_endpoint():
     data = response.json()
     assert data["zip"] == "77002"
     assert data["evidence_refs"]["imagery_tile_ids"], "Imagery references required"
+
+
+def test_chat_endpoint_parses_language():
+    client = TestClient(app)
+    message = 'Please summarize Harvey impacts for zip 77002 between Aug 28 2017 and Sept 3 2017.'
+    response = client.post('/chat', json={'message': message, 'k_tiles': 4, 'n_text': 5})
+    assert response.status_code == 200
+    body = response.json()
+    assert body['query']['zip'] == '77002'
+    assert body['answer']['zip'] == '77002'
+    assert body['answer']['evidence_refs']['imagery_tile_ids'], 'Imagery references required'
+
+
+def test_chat_endpoint_requires_zip():
+    client = TestClient(app)
+    response = client.post('/chat', json={'message': 'Tell me about Harvey flooding'})
+    assert response.status_code == 400
+    assert 'ZIP' in response.json()['detail']

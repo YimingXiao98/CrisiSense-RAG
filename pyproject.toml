@@ -29,15 +29,22 @@ dependencies = [
     "pyproj",
     "rtree",
     "tqdm",
-    "loguru"
+    "loguru",
+    "python-dateutil",
+    "rank-bm25",
+    "sentence-transformers",
+    "torch",
+    "pgeocode"
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-asyncio"]
 
 [tool.setuptools]
-packages = ["app", "app.core", "app.core.indexing", "app.core.retrieval", "app.core.models", "app.core.eval", "app.core.dataio", "app.routers"]
-package-dir = {"" = "app"}
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["app"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

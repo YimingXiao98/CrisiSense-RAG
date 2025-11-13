@@ -153,18 +153,24 @@ class TestClient:
     def get(self, path: str):
         handler = self.app.routes[path]["GET"]
         request = Request(self.app)
-        result = handler(**_build_args(handler, request, None))
-        if inspect.iscoroutine(result):
-            import asyncio
-            result = asyncio.run(result)
-        return Response(result if isinstance(result, dict) else {"data": result})
+        try:
+            result = handler(**_build_args(handler, request, None))
+            if inspect.iscoroutine(result):
+                import asyncio
+                result = asyncio.run(result)
+            return Response(result if isinstance(result, dict) else {"data": result})
+        except HTTPException as exc:
+            return Response({"detail": exc.detail}, status_code=exc.status_code)
 
     def post(self, path: str, json: Dict[str, Any]):
         handler = self.app.routes[path]["POST"]
         request = Request(self.app)
         kwargs = _build_args(handler, request, json)
-        result = handler(**kwargs)
-        if inspect.iscoroutine(result):
-            import asyncio
-            result = asyncio.run(result)
-        return Response(result if isinstance(result, dict) else {"data": result})
+        try:
+            result = handler(**kwargs)
+            if inspect.iscoroutine(result):
+                import asyncio
+                result = asyncio.run(result)
+            return Response(result if isinstance(result, dict) else {"data": result})
+        except HTTPException as exc:
+            return Response({"detail": exc.detail}, status_code=exc.status_code)

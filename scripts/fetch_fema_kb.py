@@ -7,7 +7,10 @@ from collections import defaultdict
 from pathlib import Path
 from typing import List
 
-import requests
+try:  # pragma: no cover - prefer real requests when available
+    import requests  # type: ignore
+except Exception:  # pragma: no cover - fallback to offline stub
+    from offline_requests import requests  # type: ignore
 from loguru import logger
 
 from app.core.dataio.loaders import save_parquet

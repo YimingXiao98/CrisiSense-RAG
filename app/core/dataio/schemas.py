@@ -105,3 +105,21 @@ class RAGAnswer(BaseModel):
     time_window: Dict[str, str]
     estimates: Dict[str, object]
     evidence_refs: Dict[str, List[str]]
+
+
+class ChatRequest(BaseModel):
+    """Natural-language chat prompt converted into a structured query."""
+
+    message: str
+    zip: Optional[str] = None
+    start: Optional[date] = None
+    end: Optional[date] = None
+    k_tiles: Optional[int] = None
+    n_text: Optional[int] = None
+
+
+class ChatResponse(BaseModel):
+    """Chat-style response bundling the interpreted query and the RAG answer."""
+
+    query: RAGQuery
+    answer: RAGAnswer
