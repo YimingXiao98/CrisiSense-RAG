@@ -34,7 +34,8 @@ dependencies = [
     "rank-bm25",
     "sentence-transformers",
     "torch",
-    "pgeocode"
+    "pgeocode",
+    "google-generativeai"
 ]
 
 [project.optional-dependencies]

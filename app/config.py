@@ -1,37 +1,56 @@
 """Application configuration utilities."""
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
 from dotenv import load_dotenv
-from pydantic import BaseSettings, Field
+from pydantic import BaseModel, Field
 
 
-class Settings(BaseSettings):
+class Settings(BaseModel):
     """Runtime configuration loaded from environment variables."""
 
-    model_provider: str = Field("mock", env="MODEL_PROVIDER")
-    openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
-    gemini_api_key: Optional[str] = Field(default=None, env="GEMINI_API_KEY")
-    default_time_window_days: int = Field(7, env="DEFAULT_TIME_WINDOW_DAYS")
-    data_dir: Path = Field(Path("./data"), env="DATA_DIR")
-    hybrid_corpus_path: Path = Field(Path("data/processed/text_corpus.jsonl"), env="HARVEY_CORPUS_PATH")
-    hybrid_index_path: Path = Field(Path("data/processed/text_embeddings.faiss"), env="HARVEY_EMBED_INDEX_PATH")
-    hybrid_ids_path: Path = Field(Path("data/processed/text_embeddings_ids.json"), env="HARVEY_EMBED_IDS_PATH")
-    hybrid_meta_path: Path = Field(Path("data/processed/text_embeddings_meta.json"), env="HARVEY_EMBED_META_PATH")
-    enable_reranker: bool = Field(False, env="HARVEY_ENABLE_RERANKER")
+    model_provider: str = Field(default="mock")
+    openai_api_key: Optional[str] = None
+    gemini_api_key: Optional[str] = None
+    default_time_window_days: int = 7
+    data_dir: Path = Path("./data")
+    hybrid_corpus_path: Path = Path("data/processed/text_corpus.jsonl")
+    hybrid_index_path: Path = Path("data/processed/text_embeddings.faiss")
+    hybrid_ids_path: Path = Path("data/processed/text_embeddings_ids.json")
+    hybrid_meta_path: Path = Path("data/processed/text_embeddings_meta.json")
+    enable_reranker: bool = False
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    @classmethod
+    def from_env(cls) -> "Settings":
+        load_dotenv()
+        data: dict[str, object] = {}
+
+        def _assign(field: str, env_name: str, parser):
+            raw = os.getenv(env_name)
+            if raw is None or raw == "":
+                return
+            data[field] = parser(raw)
+
+        _assign("model_provider", "MODEL_PROVIDER", str)
+        _assign("openai_api_key", "OPENAI_API_KEY", str)
+        _assign("gemini_api_key", "GEMINI_API_KEY", str)
+        _assign("default_time_window_days", "DEFAULT_TIME_WINDOW_DAYS", int)
+        _assign("data_dir", "DATA_DIR", lambda v: Path(v))
+        _assign("hybrid_corpus_path", "HARVEY_CORPUS_PATH", Path)
+        _assign("hybrid_index_path", "HARVEY_EMBED_INDEX_PATH", Path)
+        _assign("hybrid_ids_path", "HARVEY_EMBED_IDS_PATH", Path)
+        _assign("hybrid_meta_path", "HARVEY_EMBED_META_PATH", Path)
+        _assign("enable_reranker", "HARVEY_ENABLE_RERANKER", lambda v: v.lower() in {"1", "true", "yes", "on"})
+
+        return cls(**data)
 
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    """Load environment variables via python-dotenv and return cached settings instance."""
+    """Load environment variables and return cached settings instance."""
 
-    load_dotenv()
-    return Settings()
+    return Settings.from_env()

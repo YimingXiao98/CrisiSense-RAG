@@ -1,6 +1,7 @@
 """FastAPI entrypoint for Harvey RAG."""
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -18,7 +19,22 @@ from .routers import health
 from .routers.chat import router as chat_router
 from .routers.query import router as query_router
 
-app = FastAPI(title="Harvey RAG API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize expensive dependencies once for the app lifecycle."""
+
+    settings = get_settings()
+    locator = DataLocator(Path(settings.data_dir))
+    app.state.settings = settings
+    app.state.locator = locator
+    app.state.retriever = Retriever(locator, settings=settings)
+    app.state.vlm_client = VLMClient(settings.model_provider)
+    yield
+    # Reserved for future cleanup (DB pools, background workers, etc.).
+
+
+app = FastAPI(title="Harvey RAG API", lifespan=lifespan)
 app.include_router(health.router)
 app.include_router(query_router)
 app.include_router(chat_router)
@@ -29,14 +45,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-async def startup_event() -> None:
-    settings = get_settings()
-    app.state.locator = DataLocator(Path(settings.data_dir))
-    app.state.retriever = Retriever(app.state.locator, settings=settings)
-    app.state.vlm_client = VLMClient(settings.model_provider)
 
 
 @app.get("/")

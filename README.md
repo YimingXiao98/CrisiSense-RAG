@@ -44,6 +44,8 @@ This installs the FastAPI app, CLI scripts, and test utilities in editable mode 
   ```
 
   Each script reports progress via `loguru` and writes Parquet/GeoParquet files plus any derived indexes under `data/processed/` and `data/indexes/`.
+* Run `python scripts/validate_assets.py` to confirm the corpus/index assets exist before starting the API.
+
 
 ### 4. Run quick health checks
 
@@ -131,6 +133,11 @@ Scripts accept `--input`, `--output`, `--start`, and `--end` flags and log progr
 ## Model Providers
 
 The system supports mock, OpenAI, and Gemini providers. Configure via the `MODEL_PROVIDER` environment variable (`mock` by default). API keys are read from environment variables loaded via `.env`.
+
+- **Gemini** (default in `.env`) – set `MODEL_PROVIDER=gemini`, provide `GEMINI_API_KEY`, and optionally override `GEMINI_MODEL` (defaults to `models/gemini-1.5-flash`). The app calls Gemini directly and expects a JSON answer.
+- **Mock** – deterministic offline path used by unit tests and quick demos.
+- **OpenAI** – stubbed; currently falls back to mock output.
+
 
 ## Evaluation
 
