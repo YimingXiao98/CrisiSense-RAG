@@ -105,6 +105,7 @@ class RAGAnswer(BaseModel):
     time_window: Dict[str, str]
     estimates: Dict[str, object]
     evidence_refs: Dict[str, List[str]]
+    natural_language_summary: Optional[str] = None
 
 
 class ChatRequest(BaseModel):

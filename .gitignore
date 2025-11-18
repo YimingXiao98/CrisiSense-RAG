@@ -70,4 +70,7 @@ logs/
 RAW_DATA_REQUIREMENTS.md
 *.pdf
 LOCAL_WORKLOG.md
+*.log
+inspect_data.py
+
 

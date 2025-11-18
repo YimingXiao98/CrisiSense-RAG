@@ -41,7 +41,8 @@ def build_user_prompt(zip_code: str, time_window: dict[str, str], context: dict[
             "call_311_ids": list[str],
             "sensor_ids": list[str],
             "kb_refs": list[str]
-          }}
+          }},
+          "natural_language_summary": str
         }}
         """
     )

@@ -134,20 +134,22 @@ Scripts accept `--input`, `--output`, `--start`, and `--end` flags and log progr
 
 The system supports mock, OpenAI, and Gemini providers. Configure via the `MODEL_PROVIDER` environment variable (`mock` by default). API keys are read from environment variables loaded via `.env`.
 
-- **Gemini** (default in `.env`) – set `MODEL_PROVIDER=gemini`, provide `GEMINI_API_KEY`, and optionally override `GEMINI_MODEL` (defaults to `models/gemini-1.5-flash`). The app calls Gemini directly and expects a JSON answer.
+- **Gemini** (default in `.env`) – set `MODEL_PROVIDER=gemini`, provide `GEMINI_API_KEY`, and optionally override `GEMINI_MODEL` (defaults to `models/gemini-1.5-flash`). `GEMINI_MAX_ATTEMPTS` controls retry/backoff attempts. The app calls Gemini directly and expects a JSON answer.
 - **Mock** – deterministic offline path used by unit tests and quick demos.
 - **OpenAI** – stubbed; currently falls back to mock output.
 
 
 ## Evaluation
 
-Run end-to-end evaluation on example data:
-
-```bash
-python -m app.core.eval.eval_runner --config data/examples/eval_config.json
-```
-
-Outputs include metrics CSVs and confusion matrices saved under `data/processed/`.
+1. Validate the processed assets to ensure the retriever has everything it needs:
+   ```bash
+   python scripts/validate_assets.py
+   ```
+2. Run the evaluator (defaults to the mock provider; set `provider` in the config to `gemini` when you want real calls):
+   ```bash
+   python -m app.core.eval.eval_runner --config data/examples/eval_config.json
+   ```
+   The runner queries the API, compares `structural_damage_pct` against the claims-derived ground truth, and writes `data/processed/eval_results.json` with per-query rows plus MAE/RMSE summary.
 
 ## Testing
 

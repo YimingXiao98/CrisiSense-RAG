@@ -72,6 +72,7 @@ class VLMClient:
                 "sensor_ids": sensor_ids[:2],
                 "kb_refs": kb_refs,
             },
+            "natural_language_summary": f"Based on {len(tile_ids)} imagery tiles and {len(tweet_ids)} tweets, we estimate moderate structural damage in zip {zip_code}.",
         }
 
     def _openai_stub(self, zip_code: str, time_window: Dict[str, str], context: Dict[str, object]) -> Dict[str, object]:
