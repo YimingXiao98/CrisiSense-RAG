@@ -87,16 +87,9 @@ class HybridTextRetriever:
             query.zip, start_dt, end_dt, plan.imagery_k)
         sensors = self.spatial_index.nearest_sensors_by_zip(query.zip, n=3)
 
-        # Semantic Query Generation
-        # If we have a natural language query, use it directly for retrieval.
-        # Otherwise, fall back to a constructed summary query.
-        if query.text_query and len(query.text_query.strip()) > 5:
-            search_text = query.text_query
-        else:
-            search_text = f"Harvey flood damage impact summary for zip {query.zip} between {start_date} and {end_date}."
-
+        query_str = query.text_query or f"Harvey flood damage impact summary for zip {query.zip} between {start_date} and {end_date}."
         text_docs = self._hybrid_search(
-            query_text=search_text,
+            query_text=query_str,
             zip_code=query.zip,
             start=start_date,
             end=end_date,
@@ -244,14 +237,27 @@ class HybridTextRetriever:
         return scores
 
     def _combine_scores(self, bm25: Dict[str, float], dense: Dict[str, float]) -> Dict[str, float]:
+        """Combine scores using Reciprocal Rank Fusion (RRF)."""
+        rrf_k = 60
         combined: Dict[str, float] = {}
+        
+        # Rank BM25 (Higher score is better)
+        sorted_bm25 = sorted(bm25.keys(), key=lambda k: bm25[k], reverse=True)
+        rank_bm25 = {doc_id: i + 1 for i, doc_id in enumerate(sorted_bm25)}
+
+        # Rank Dense (Higher score is better for Cosine Similarity)
+        sorted_dense = sorted(dense.keys(), key=lambda k: dense[k], reverse=True)
+        rank_dense = {doc_id: i + 1 for i, doc_id in enumerate(sorted_dense)}
+
         all_ids = set(bm25.keys()) | set(dense.keys())
         for doc_id in all_ids:
-            score = self.bm25_weight * \
-                bm25.get(doc_id, 0.0) + self.dense_weight * \
-                dense.get(doc_id, 0.0)
-            if score > 0:
-                combined[doc_id] = score
+            score = 0.0
+            if doc_id in rank_bm25:
+                score += 1.0 / (rrf_k + rank_bm25[doc_id])
+            if doc_id in rank_dense:
+                score += 1.0 / (rrf_k + rank_dense[doc_id])
+            combined[doc_id] = score
+            
         return combined
 
     def _rerank(self, query_text: str, doc_ids: List[str]) -> List[str]:

@@ -87,14 +87,7 @@ def build_chat_query(
     k_tiles = chat.k_tiles or RAGQuery.model_fields["k_tiles"].default
     n_text = chat.n_text or RAGQuery.model_fields["n_text"].default
 
-    return RAGQuery(
-        zip=zip_code,
-        start=start_date,
-        end=end_date,
-        k_tiles=k_tiles,
-        n_text=n_text,
-        text_query=message
-    )
+    return RAGQuery(zip=zip_code, start=start_date, end=end_date, k_tiles=k_tiles, n_text=n_text, text_query=message)
 
 
 def _extract_zip(message: str) -> Optional[str]:
