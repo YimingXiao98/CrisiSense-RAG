@@ -1,10 +1,10 @@
-"""Spatial indexing utilities using simple list filters."""
+"""Spatial indexing utilities using hash map for O(1) access."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from loguru import logger
 
@@ -17,6 +17,25 @@ class SpatialIndex:
 
     imagery: List[dict]
     sensors: List[dict]
+    _zip_index: Dict[str, List[dict]] = field(init=False, default_factory=dict)
+    _sensor_zip_index: Dict[str, List[dict]] = field(init=False, default_factory=dict)
+
+    def __post_init__(self):
+        # Index imagery by ZIP
+        for tile in self.imagery:
+            z = tile.get("zip")
+            if z:
+                if z not in self._zip_index:
+                    self._zip_index[z] = []
+                self._zip_index[z].append(tile)
+        
+        # Index sensors by ZIP
+        for sensor in self.sensors:
+            z = sensor.get("zip")
+            if z:
+                if z not in self._sensor_zip_index:
+                    self._sensor_zip_index[z] = []
+                self._sensor_zip_index[z].append(sensor)
 
     @classmethod
     def from_parquet(cls, imagery_path: Path, sensors_path: Path) -> "SpatialIndex":
@@ -51,15 +70,23 @@ class SpatialIndex:
         return [tile for _, tile in latest[:k]]
 
     def nearest_sensors_by_zip(self, zip_code: str, n: int = 3) -> List[dict]:
-        sensors = [s for s in self.sensors if s.get("zip") == zip_code]
-        sensors.sort(key=lambda s: s.get("timestamp", ""), reverse=True)
-        return sensors[:n]
+        sensors = self._sensor_zip_index.get(zip_code, [])
+        if not sensors and not zip_code:
+             sensors = self.sensors
+             
+        sensors_sorted = sorted(
+            sensors, 
+            key=lambda s: s.get("timestamp", ""), 
+            reverse=True
+        )
+        return sensors_sorted[:n]
 
     def _filter_tiles(self, zip_code: Optional[str], start: datetime, end: datetime) -> List[dict]:
+        # Use index if ZIP is provided
+        candidates = self._zip_index.get(zip_code, []) if zip_code else self.imagery
+        
         matches = []
-        for tile in self.imagery:
-            if zip_code and tile.get("zip") != zip_code:
-                continue
+        for tile in candidates:
             ts = self._parse_timestamp(tile.get("timestamp"))
             if ts is None or ts < start or ts > end:
                 continue
