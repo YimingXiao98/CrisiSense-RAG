@@ -77,6 +77,9 @@ LOCAL_WORKLOG.md
 *.log
 inspect_data.py
 PUBLICATION_ROADMAP.md
-conversation_history.md
-IMPACT_ASSESSMENT.md
+# Documentation
+*.md
+!README.md
 
+data/examples/
+data/annotations/*

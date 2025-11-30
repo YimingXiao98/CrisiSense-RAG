@@ -1,4 +1,5 @@
 """Model client adapters for multimodal inference."""
+
 from __future__ import annotations
 
 import io
@@ -12,6 +13,9 @@ from typing import Dict, List, Optional
 import httpx
 from loguru import logger
 from PIL import Image
+
+# Disable DecompressionBombError for large satellite images
+Image.MAX_IMAGE_PIXELS = None
 
 from .prompts import (
     QUERY_PARSING_SYSTEM_PROMPT,
@@ -27,8 +31,7 @@ class VLMClient:
     def __init__(self, provider: str | None = None) -> None:
         self.provider = provider or os.getenv("MODEL_PROVIDER")
         self.gemini_api_key = os.getenv("GEMINI_API_KEY")
-        self.gemini_model = os.getenv(
-            "GEMINI_MODEL", "models/gemini-1.5-flash")
+        self.gemini_model = os.getenv("GEMINI_MODEL", "models/gemini-1.5-flash")
         self.gemini_max_attempts = int(os.getenv("GEMINI_MAX_ATTEMPTS", "3"))
         self._gemini_client = None
 
@@ -59,13 +62,20 @@ class VLMClient:
         }
 
         if not self.provider:
-            return self._warning_response(zip_code, time_window, context, "No model provider configured.")
+            return self._warning_response(
+                zip_code, time_window, context, "No model provider configured."
+            )
 
         if self.provider == "gemini":
             return self._gemini_response(zip_code, time_window, context)
-        
+
         # If provider is set but not supported (e.g. "openai" which was a stub)
-        return self._warning_response(zip_code, time_window, context, f"Provider '{self.provider}' is not supported or implemented.")
+        return self._warning_response(
+            zip_code,
+            time_window,
+            context,
+            f"Provider '{self.provider}' is not supported or implemented.",
+        )
 
     def parse_query(self, message: str) -> Dict[str, str | None]:
         """Parse natural language query into structured parameters using LLM."""
@@ -90,8 +100,7 @@ class VLMClient:
             return {"zip": None, "start": None, "end": None}
 
         parser_model = genai.GenerativeModel(
-            self.gemini_model,
-            system_instruction=QUERY_PARSING_SYSTEM_PROMPT.strip()
+            self.gemini_model, system_instruction=QUERY_PARSING_SYSTEM_PROMPT.strip()
         )
 
         user_prompt = build_query_parsing_prompt(message)
@@ -109,7 +118,13 @@ class VLMClient:
             logger.error(f"Gemini query parsing failed: {exc}")
             return {"zip": None, "start": None, "end": None}
 
-    def _warning_response(self, zip_code: str, time_window: Dict[str, str], context: Dict[str, object], message: str) -> Dict[str, object]:
+    def _warning_response(
+        self,
+        zip_code: str,
+        time_window: Dict[str, str],
+        context: Dict[str, object],
+        message: str,
+    ) -> Dict[str, object]:
         """Return a response indicating that generation was skipped."""
         tile_ids = [tile["tile_id"] for tile in context.get("imagery_tiles", [])]
         tweet_ids = []
@@ -119,11 +134,13 @@ class VLMClient:
             # But for the warning response, we just want to show what we found.
             # Better to use the explicit lists if available.
             pass
-            
+
         tweet_ids = [t.get("tweet_id") for t in context.get("tweets", [])]
         call_ids = [c.get("record_id") for c in context.get("calls", [])]
         sensor_ids = [s.get("sensor_id") for s in context.get("sensors", [])]
-        kb_refs = [f"fema_zip_{zip_code}_2010_2016"] if context.get("kb_summary") else []
+        kb_refs = (
+            [f"fema_zip_{zip_code}_2010_2016"] if context.get("kb_summary") else []
+        )
 
         return {
             "zip": zip_code,
@@ -147,7 +164,7 @@ class VLMClient:
         """Fetch image, resize, and compress."""
         if not uri:
             return None
-        
+
         try:
             data = None
             # Handle local files
@@ -159,14 +176,14 @@ class VLMClient:
                     # Try relative to project root if needed, or just fail
                     # Assuming uri is relative to cwd or absolute
                     pass
-            
+
             # Handle HTTP
             if data is None:
                 with httpx.Client(timeout=10.0) as client:
                     resp = client.get(uri)
                     resp.raise_for_status()
                     data = resp.content
-            
+
             if not data:
                 return None
 
@@ -177,7 +194,7 @@ class VLMClient:
                 max_dim = 1024
                 if max(img.size) > max_dim:
                     img.thumbnail((max_dim, max_dim))
-                
+
                 out_io = io.BytesIO()
                 img.save(out_io, format="JPEG", quality=85)
                 return out_io.getvalue()
@@ -186,46 +203,68 @@ class VLMClient:
             logger.warning(f"Failed to fetch/process image {uri}: {exc}")
             return None
 
-    def _gemini_response(self, zip_code: str, time_window: Dict[str, str], context: Dict[str, object]) -> Dict[str, object]:
+    def _gemini_response(
+        self, zip_code: str, time_window: Dict[str, str], context: Dict[str, object]
+    ) -> Dict[str, object]:
         """Call the Gemini API and parse the structured JSON response."""
 
         if not self.gemini_api_key:
-            return self._warning_response(zip_code, time_window, context, "GEMINI_API_KEY not set.")
+            return self._warning_response(
+                zip_code, time_window, context, "GEMINI_API_KEY not set."
+            )
 
         try:
             import google.generativeai as genai
         except ImportError as exc:
-            return self._warning_response(zip_code, time_window, context, "google-generativeai package missing.")
+            return self._warning_response(
+                zip_code, time_window, context, "google-generativeai package missing."
+            )
 
-        if self._gemini_client is None:
-            genai.configure(api_key=self.gemini_api_key)
-            self._gemini_client = genai.GenerativeModel(
-                self.gemini_model, system_instruction=SYSTEM_PROMPT.strip())
+        # Determine mode based on imagery presence
+        imagery_tiles = context.get("imagery_tiles", [])
+        is_text_only = len(imagery_tiles) == 0
+
+        # Always re-initialize client to ensure correct system prompt is used
+        # (This is slightly inefficient but safe for switching modes)
+        genai.configure(api_key=self.gemini_api_key)
+
+        from .prompts import SYSTEM_PROMPT, TEXT_ONLY_SYSTEM_PROMPT
+
+        instruction = TEXT_ONLY_SYSTEM_PROMPT if is_text_only else SYSTEM_PROMPT
+
+        self._gemini_client = genai.GenerativeModel(
+            self.gemini_model, system_instruction=instruction.strip()
+        )
 
         user_prompt = build_user_prompt(zip_code, time_window, context)
-        
-        parts = [{"text": user_prompt}]
-        
+
+        # Reorder: Images FIRST, then Text Prompt LAST
+        # This helps the model attend to the text instructions and evidence which might be lost if sent first.
+        parts = []
+
         # Parallel fetch images
         imagery_tiles = context.get("imagery_tiles", [])
         # Limit to 16 images max
         imagery_tiles = imagery_tiles[:16]
-        
+
         with ThreadPoolExecutor(max_workers=8) as executor:
             future_to_uri = {
-                executor.submit(self._fetch_and_process_image, tile.get("uri")): tile.get("uri")
-                for tile in imagery_tiles if tile.get("uri")
+                executor.submit(
+                    self._fetch_and_process_image, tile.get("uri")
+                ): tile.get("uri")
+                for tile in imagery_tiles
+                if tile.get("uri")
             }
-            
+
             for future in as_completed(future_to_uri):
                 image_data = future.result()
                 if image_data:
-                    parts.append({
-                        "inline_data": {
-                            "mime_type": "image/jpeg",
-                            "data": image_data
-                        }
-                    })
+                    parts.append(
+                        {"inline_data": {"mime_type": "image/jpeg", "data": image_data}}
+                    )
+
+        # Append text prompt LAST
+        parts.append({"text": user_prompt})
 
         messages = [
             {"role": "user", "parts": parts},
@@ -236,32 +275,45 @@ class VLMClient:
             try:
                 response = self._gemini_client.generate_content(
                     messages,
-                    generation_config={
-                        "response_mime_type": "application/json"},
+                    generation_config={"response_mime_type": "application/json"},
                 )
                 latency_ms = round((time.perf_counter() - start_ts) * 1000, 2)
                 payload = self._extract_response_text(response)
                 parsed = json.loads(payload)
                 usage = getattr(response, "usage_metadata", None)
                 usage_info = getattr(usage, "__dict__", usage)
-                logger.info("Gemini call succeeded", attempt=attempt,
-                            latency_ms=latency_ms, usage=usage_info)
+                logger.info(
+                    "Gemini call succeeded",
+                    attempt=attempt,
+                    latency_ms=latency_ms,
+                    usage=usage_info,
+                )
                 return parsed
             except json.JSONDecodeError:
                 logger.warning(
                     "Gemini returned non-JSON response",
-                    snippet=payload[:200] if 'payload' in locals() else '',
+                    snippet=payload[:200] if "payload" in locals() else "",
                 )
-                return self._warning_response(zip_code, time_window, context, "Gemini returned invalid JSON.")
+                return self._warning_response(
+                    zip_code, time_window, context, "Gemini returned invalid JSON."
+                )
             except Exception as exc:
                 latency_ms = round((time.perf_counter() - start_ts) * 1000, 2)
-                logger.error("Gemini API call failed", attempt=attempt,
-                             latency_ms=latency_ms, error=str(exc))
+                logger.error(
+                    "Gemini API call failed",
+                    attempt=attempt,
+                    latency_ms=latency_ms,
+                    error=str(exc),
+                )
                 if attempt == self.gemini_max_attempts:
-                    return self._warning_response(zip_code, time_window, context, f"Gemini API failed: {exc}")
+                    return self._warning_response(
+                        zip_code, time_window, context, f"Gemini API failed: {exc}"
+                    )
                 time.sleep(min(2 ** (attempt - 1), 4))
 
-        return self._warning_response(zip_code, time_window, context, "Gemini API retries exhausted.")
+        return self._warning_response(
+            zip_code, time_window, context, "Gemini API retries exhausted."
+        )
 
     def _extract_response_text(self, response) -> str:
         """Best-effort extraction of text from Gemini responses."""
@@ -277,6 +329,28 @@ class VLMClient:
                 value = getattr(part, "text", None)
                 if value:
                     return value.strip()
-        logger.warning(
-            "Gemini response had no text content; returning empty payload")
+        logger.warning("Gemini response had no text content; returning empty payload")
         return ""
+
+    def _generate_text(self, prompt: str) -> str:
+        """Simple text generation for evaluation purposes."""
+        if not self.gemini_api_key:
+            raise ValueError("GEMINI_API_KEY not set")
+
+        try:
+            import google.generativeai as genai
+        except ImportError:
+            raise ImportError("google-generativeai package missing")
+
+        if self._gemini_client is None:
+            genai.configure(api_key=self.gemini_api_key)
+            self._gemini_client = genai.GenerativeModel(
+                self.gemini_model, system_instruction=SYSTEM_PROMPT.strip()
+            )
+
+        try:
+            response = self._gemini_client.generate_content(prompt)
+            return self._extract_response_text(response)
+        except Exception as e:
+            logger.error(f"Text generation failed: {e}")
+            raise

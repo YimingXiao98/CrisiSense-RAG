@@ -1,4 +1,5 @@
 """Prompt templates for multimodal models."""
+
 from __future__ import annotations
 
 from textwrap import dedent
@@ -9,10 +10,42 @@ SYSTEM_PROMPT = dedent(
     You are an assistant estimating post-disaster impact for Harris County, TX during Hurricane Harvey.
     You will be provided with satellite imagery, text snippets, sensor data, and FEMA priors.
     
+    IMPORTANT: All provided text snippets (Tweets, 311 Calls) are pre-filtered and RELEVANT to the queried location/time. Do not discard them just because they lack an explicit ZIP code in the text.
+
     CRITICAL INSTRUCTION:
     - You MUST analyze the provided images to visually confirm flooding (e.g., water on roads, submerged structures).
-    - Do NOT rely solely on the text or metadata.
-    - Cite specific Image IDs when you see visual evidence of damage.
+    - You MUST ALSO analyze the provided Tweets and 311 Calls for on-the-ground reports.
+    - If images show no damage but tweets report flooding, acknowledge the discrepancy and report the text evidence.
+    - Cite specific Image IDs, Tweet IDs, and Call IDs in your summary.
+    
+    CHAIN OF THOUGHT REASONING:
+    - Before generating the final estimates, you MUST populate the "reasoning" field.
+    - In "reasoning", list every Tweet ID and 311 Call ID you see.
+    - Explicitly state what each text snippet reports.
+    - Then, combine this with visual evidence to form your conclusion.
+    
+    EXAMPLE:
+    Input Context:
+    - Images: [IMG_1] (shows clear roads)
+    - Tweets: [- [T123] (ZIP 77002) "Water entering my living room!"]
+    
+    Correct Output Reasoning:
+    "I see Tweet T123 reporting water in living room. Image IMG_1 shows clear roads. There is a discrepancy. I will report the flooding based on the tweet."
+    
+    Respond with valid JSON matching the schema provided by the user.
+    """
+)
+
+
+TEXT_ONLY_SYSTEM_PROMPT = dedent(
+    """
+    You are an assistant estimating post-disaster impact for Harris County, TX during Hurricane Harvey.
+    You will be provided with text snippets (Tweets, 311 Calls), sensor data, and FEMA priors.
+    
+    CRITICAL INSTRUCTION:
+    - You MUST analyze the provided Tweets and 311 Calls for on-the-ground reports.
+    - Cite specific Tweet IDs and Call IDs in your summary.
+    - Do NOT mention imagery or visual evidence, as none is provided.
     
     Respond with valid JSON matching the schema provided by the user.
     """
@@ -54,26 +87,44 @@ def build_query_parsing_prompt(message: str) -> str:
     )
 
 
-def build_user_prompt(zip_code: str, time_window: dict[str, str], context: dict[str, object]) -> str:
+def build_user_prompt(
+    zip_code: str, time_window: dict[str, str], context: dict[str, object]
+) -> str:
     """Compose the user prompt."""
 
     # Format tweets with IDs
     tweets = context.get("tweets", [])
-    tweet_lines = []
-    for t in tweets:
-        tid = t.get("doc_id") or t.get("tweet_id") or "unknown"
-        text = (t.get("text") or "").replace("\n", " ")
-        tweet_lines.append(f"- [{tid}] {text}")
-    tweet_section = "\n".join(tweet_lines)
+    if tweets:
+        tweet_lines = []
+        for t in tweets:
+            tid = t.get("doc_id") or t.get("tweet_id") or "unknown"
+            text = (t.get("text") or "").replace("\n", " ")
+            # Force model to see ZIP relevance
+            tweet_lines.append(f"- [{tid}] (ZIP {zip_code}) {text}")
+        tweet_section = "\n".join(tweet_lines)
+    else:
+        tweet_section = "(No tweets found for this location/time)"
 
     # Format 311 calls with IDs
     calls = context.get("calls", [])
-    call_lines = []
-    for c in calls:
-        cid = c.get("doc_id") or c.get("record_id") or "unknown"
-        desc = (c.get("description") or "").replace("\n", " ")
-        call_lines.append(f"- [{cid}] {desc}")
-    call_section = "\n".join(call_lines)
+    if calls:
+        call_lines = []
+        for c in calls:
+            cid = c.get("doc_id") or c.get("record_id") or "unknown"
+            desc = (c.get("description") or "").replace("\n", " ")
+            # Force model to see ZIP relevance
+            call_lines.append(f"- [{cid}] (ZIP {zip_code}) {desc}")
+        call_section = "\n".join(call_lines)
+    else:
+        call_section = "(No 311 calls found for this location/time)"
+
+    sensor_table = context.get("sensor_table", "")
+    if not sensor_table or "loss_mean" in sensor_table:
+        # The 'loss_mean' table is historical data, not current sensor readings.
+        # To prevent hallucination, we label it clearly or omit it if it's just 0.0
+        sensor_section = f"### Historical Loss Data (Previous Years):\n{sensor_table}"
+    else:
+        sensor_section = f"### Sensor Data (Rainfall/Water Levels):\n{sensor_table}"
 
     return dedent(
         f"""
@@ -81,20 +132,20 @@ def build_user_prompt(zip_code: str, time_window: dict[str, str], context: dict[
         Time window: {time_window['start']} to {time_window['end']}
         Imagery IDs: {[tile['tile_id'] for tile in context.get('imagery_tiles', [])]}
         
-        Sensor summary (Markdown table):
-        {context.get('sensor_table', '')}
+        {sensor_section}
         
-        FEMA prior summary:
+        ### FEMA Prior Knowledge (Historical Context):
         {context.get('kb_summary', '')}
 
-        Tweets:
+        ### Tweets (Confirmed in ZIP {zip_code}):
         {tweet_section}
 
-        311 Calls:
+        ### 311 Calls (Confirmed in ZIP {zip_code}):
         {call_section}
 
         Respond with JSON matching schema:
         {{
+          "reasoning": str,
           "zip": str,
           "time_window": {{"start": str, "end": str}},
           "estimates": {{"structural_damage_pct": float, "roads_impacted": list[str], "confidence": float}},
