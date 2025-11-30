@@ -1,9 +1,0 @@
-{
-  "data_dir": "data",
-  "provider": "mock",
-  "ground_truth": "claims",
-  "queries": [
-    {"zip": "77002", "start": "2017-08-28", "end": "2017-09-03", "k_tiles": 4, "n_text": 10},
-    {"zip": "77096", "start": "2017-08-25", "end": "2017-09-05", "k_tiles": 4, "n_text": 10}
-  ]
-}
