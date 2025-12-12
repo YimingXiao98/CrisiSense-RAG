@@ -1,0 +1,10 @@
+{
+  "queries": [
+    {
+      "query": "Assess flood damage in 77063 between 2017-08-26 and 2017-08-29",
+      "zip": "77063",
+      "start": "2017-08-26",
+      "end": "2017-08-29"
+    }
+  ]
+}

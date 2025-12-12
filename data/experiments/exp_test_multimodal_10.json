@@ -1,0 +1,978 @@
+{
+  "metadata": {
+    "experiment_name": "test_multimodal_10",
+    "timestamp": "2025-12-08T11:00:19.037890",
+    "config_path": "config/queries_50_mixed.json",
+    "config_hash": "27bb0d93",
+    "settings": {
+      "enable_reranker": true,
+      "enable_geo_boost": false,
+      "dense_top_k": 1000
+    },
+    "total_queries": 10,
+    "summary_stats": {
+      "successful_queries": 10,
+      "failed_queries": 0,
+      "mae": 25.087,
+      "max_error": 67.723,
+      "min_error": 1.726
+    }
+  },
+  "records": [
+    {
+      "query_id": 1,
+      "query": {
+        "zip": "77096",
+        "start_date": "2017-08-25",
+        "end_date": "2017-08-31",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_901086383942639617",
+          "tweet_901232325438164992",
+          "tweet_901323184695382017",
+          "tweet_901377628594196481",
+          "tweet_901377762476392449",
+          "tweet_901479837122125825",
+          "tweet_901629053211480066",
+          "tweet_901826476210876417",
+          "tweet_901849278003372034",
+          "tweet_901917030970003457",
+          "tweet_901918389245014016",
+          "tweet_901952108655775744",
+          "tweet_901976639000760320",
+          "tweet_902889458860785664",
+          "tweet_902933605168685056",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903399005224357889"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_12162603-101002719328",
+          "311_101002719744",
+          "311_12162747-101002719776",
+          "311_334166-101002720909",
+          "311_12164467-101002723606",
+          "311_12164586-101002724020",
+          "311_334241-101002724545",
+          "311_334244-101002724548",
+          "311_101002725591",
+          "311_101002726861",
+          "311_101002726948",
+          "311_101002728342"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Text Analyst reports significant flooding and infrastructure damage in ZIP 77096, citing multiple tweets and 311 calls indicating widespread flooding and damage, including requests for help at specific addresses. However, the Visual Analyst's high-confidence satellite imagery confirms no visible flooding or structural damage in the area, noting only extensive standing water in low-lying green spaces like the Braeburn Country Club golf course. This discrepancy suggests localized concerns from residents may not reflect broader conditions, leading to a downgrade in the overall severity assessment.",
+          "zip": "77096",
+          "time_window": {
+            "start": "2017-08-25",
+            "end": "2017-08-31"
+          },
+          "estimates": {
+            "flood_impact_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.95
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953300w294200n",
+              "20170831bC0953130w294200n",
+              "20170831bC0953000w294200n",
+              "20170831bC0952830w294200n",
+              "20170831bC0952700w294200n",
+              "20170831bC0953300w294330n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents reported significant flooding and infrastructure damage in ZIP 77096 through tweets and 311 calls. Notably, there was a request for help at 5306 Paisley, suggesting serious conditions. However, satellite imagery shows no visible flooding or structural damage in the area, confirming clear roads and operational infrastructure. High-confidence visuals indicate that reported issues may have been localized rather than widespread."
+        },
+        "formatted": "Summary: Residents reported significant flooding and infrastructure damage in ZIP 77096 through tweets and 311 calls. Notably, there was a request for help at 5306 Paisley, suggesting serious conditions. However, satellite imagery shows no visible flooding or structural damage in the area, confirming clear roads and operational infrastructure. High-confidence visuals indicate that reported issues may have been localized rather than widespread.\nDamage Estimate: 0.0%\nConfidence: 0.95\nReasoning: Text Analyst reports significant flooding and infrastructure damage in ZIP 77096, citing multiple tweets and 311 calls indicating widespread flooding and damage, including requests for help at specific addresses. However, the Visual Analyst's high-confidence satellite imagery confirms no visible flooding or structural damage in the area, noting only extensive standing water in low-lying green spaces like the Braeburn Country Club golf course. This discrepancy suggests localized concerns from residents may not reflect broader conditions, leading to a downgrade in the overall severity assessment.",
+        "damage_pct": 0.0,
+        "confidence": 0.95
+      },
+      "ground_truth": {
+        "actual_damage_pct": 3.188,
+        "mean_depth_m": 3.188,
+        "max_depth_m": 29.049,
+        "flooded_pct": 65.05,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 2,
+      "query": {
+        "zip": "77008",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_901377628594196481",
+          "tweet_901377762476392449",
+          "tweet_901629053211480066",
+          "tweet_901826476210876417",
+          "tweet_901849278003372034",
+          "tweet_901917030970003457",
+          "tweet_901917813392199684",
+          "tweet_901952108655775744",
+          "tweet_901976639000760320",
+          "tweet_902388226442264576",
+          "tweet_902835549135917056",
+          "tweet_902889458860785664",
+          "tweet_902933605168685056",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903399005224357889",
+          "tweet_903419965331697664",
+          "tweet_903656280010711042"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_334166-101002720909",
+          "311_12164467-101002723606",
+          "311_12164586-101002724020",
+          "311_334241-101002724545",
+          "311_334244-101002724548",
+          "311_12164892-101002725533",
+          "311_12164975-101002725961",
+          "311_12165335-101002726928",
+          "311_12165476-101002727284",
+          "311_12165614-101002727704",
+          "311_101002727723",
+          "311_12165838-101002728360"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Analysis of reports from ZIP 77008 during Hurricane Harvey indicates a significant flooding impact. Text reports detail widespread flooding and 'historic' flood damage, while satellite imagery corroborates extensive flooding in certain areas but shows lower-than-expected severity for structural damage. Specifically, while the visual analysis recognizes substantial flooding along Buffalo Bayou, it also indicates no evident structural damage in many regions. This discrepancy suggests that while localized flooding caused disruption, the overall structural integrity remains intact in broader areas. Localized reports from the Text Analyst highlight specific incidents that may not be captured in the satellite imagery due to their finer scale.",
+          "zip": "77008",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "flood_impact_pct": 65.0,
+            "roads_impacted": [
+              "Local roads submerged near Buffalo Bayou"
+            ],
+            "confidence": 0.9
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0952830w294630n",
+              "20170831bC0952700w294630n",
+              "20170831bC0952530w294630n",
+              "20170831bC0952400w294630n",
+              "20170831bC0952230w294630n",
+              "20170831bC0952830w294800n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents reported significant flooding during Hurricane Harvey, with tweets describing 'historic flooding' and ongoing issues like road blockages due to submerged local roads. However, high-resolution satellite imagery indicates substantial flooding mainly along Buffalo Bayou, with no visible structural damage across most areas and only localized infrastructure issues noted."
+        },
+        "formatted": "Summary: Residents reported significant flooding during Hurricane Harvey, with tweets describing 'historic flooding' and ongoing issues like road blockages due to submerged local roads. However, high-resolution satellite imagery indicates substantial flooding mainly along Buffalo Bayou, with no visible structural damage across most areas and only localized infrastructure issues noted.\nDamage Estimate: 65.0%\nConfidence: 0.9\nReasoning: Analysis of reports from ZIP 77008 during Hurricane Harvey indicates a significant flooding impact. Text reports detail widespread flooding and 'historic' flood damage, while satellite imagery corroborates extensive flooding in certain areas but shows lower-than-expected severity for structural damage. Specifically, while the visual analysis recognizes substantial flooding along Buffalo Bayou, it also indicates no evident structural damage in many regions. This discrepancy suggests that while localized flooding caused disruption, the overall structural integrity remains intact in broader areas. Localized reports from the Text Analyst highlight specific incidents that may not be captured in the satellite imagery due to their finer scale.",
+        "damage_pct": 65.0,
+        "confidence": 0.9
+      },
+      "ground_truth": {
+        "actual_damage_pct": 3.31,
+        "mean_depth_m": 3.31,
+        "max_depth_m": 38.238,
+        "flooded_pct": 54.44,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 3,
+      "query": {
+        "zip": "77022",
+        "start_date": "2017-08-27",
+        "end_date": "2017-09-02",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_901629053211480066",
+          "tweet_901826476210876417",
+          "tweet_901849278003372034",
+          "tweet_901917030970003457",
+          "tweet_901917813392199684",
+          "tweet_901952108655775744",
+          "tweet_901976639000760320",
+          "tweet_902835549135917056",
+          "tweet_902889458860785664",
+          "tweet_902933605168685056",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903419965331697664",
+          "tweet_903656280010711042",
+          "tweet_903823717926567936",
+          "tweet_903834779384254465",
+          "tweet_903942638411374592",
+          "tweet_903992796763348992"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_12164467-101002723606",
+          "311_12164586-101002724020",
+          "311_334241-101002724545",
+          "311_334244-101002724548",
+          "311_12164892-101002725533",
+          "311_12164975-101002725961",
+          "311_12165335-101002726928",
+          "311_12165476-101002727284",
+          "311_12165614-101002727704",
+          "311_12165838-101002728360",
+          "311_101002730839",
+          "311_101002732007"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Residents in ZIP 77022 reported 'historic flooding' and 'flood damage' through social media and 311 calls. Specific complaints were made regarding extensive water damage related to Hurricane Harvey, suggesting a severe impact on infrastructure. However, high-resolution satellite imagery shows significant localized flooding along the Buffalo Bayou and surrounding areas, yet no visible structural damage was detected in the buildings or homes based on the imagery analysis. The imagery reveals widespread road inundation, which correlates with the text reports of impacted roads but contrasts with claims of severe structural damage, leading to the conclusion that while flooding is substantial, the structural impact is minimal.",
+          "zip": "77022",
+          "time_window": {
+            "start": "2017-08-27",
+            "end": "2017-09-02"
+          },
+          "estimates": {
+            "flood_impact_pct": 70.0,
+            "roads_impacted": [
+              "Numerous local roads and highway service roads are impacted by flooding."
+            ],
+            "confidence": 0.9
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0952530w294800n",
+              "20170831bC0952400w294800n",
+              "20170831bC0952230w294800n",
+              "20170831bC0952530w294930n",
+              "20170831bC0952400w294930n",
+              "20170831bC0952230w294930n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents reported extensive flooding and damage during Hurricane Harvey, with numerous social media posts and 311 calls indicating significant water damage. Satellite imagery confirmed substantial flooding near Buffalo Bayou, particularly affecting local roads and parkland, but did not reveal any significant structural damage to buildings or homes."
+        },
+        "formatted": "Summary: Residents reported extensive flooding and damage during Hurricane Harvey, with numerous social media posts and 311 calls indicating significant water damage. Satellite imagery confirmed substantial flooding near Buffalo Bayou, particularly affecting local roads and parkland, but did not reveal any significant structural damage to buildings or homes.\nDamage Estimate: 70.0%\nConfidence: 0.9\nReasoning: Residents in ZIP 77022 reported 'historic flooding' and 'flood damage' through social media and 311 calls. Specific complaints were made regarding extensive water damage related to Hurricane Harvey, suggesting a severe impact on infrastructure. However, high-resolution satellite imagery shows significant localized flooding along the Buffalo Bayou and surrounding areas, yet no visible structural damage was detected in the buildings or homes based on the imagery analysis. The imagery reveals widespread road inundation, which correlates with the text reports of impacted roads but contrasts with claims of severe structural damage, leading to the conclusion that while flooding is substantial, the structural impact is minimal.",
+        "damage_pct": 70.0,
+        "confidence": 0.9
+      },
+      "ground_truth": {
+        "actual_damage_pct": 2.277,
+        "mean_depth_m": 2.277,
+        "max_depth_m": 29.362,
+        "flooded_pct": 61.74,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 4,
+      "query": {
+        "zip": "77026",
+        "start_date": "2017-08-28",
+        "end_date": "2017-09-03",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_901976639000760320",
+          "tweet_902835549135917056",
+          "tweet_902889458860785664",
+          "tweet_902911818624053248",
+          "tweet_902933605168685056",
+          "tweet_902946518239387648",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903399005224357889",
+          "tweet_903419965331697664",
+          "tweet_903460810483265540",
+          "tweet_903656280010711042",
+          "tweet_903706030013640705",
+          "tweet_903823717926567936",
+          "tweet_903834779384254465",
+          "tweet_903942638411374592",
+          "tweet_903992796763348992",
+          "tweet_904445834288406529"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_12164586-101002724020",
+          "311_334241-101002724545",
+          "311_334244-101002724548",
+          "311_12164892-101002725533",
+          "311_12164975-101002725961",
+          "311_12165335-101002726928",
+          "311_12165476-101002727284",
+          "311_101002730057",
+          "311_101002730083",
+          "311_101002730465",
+          "311_101002732312",
+          "311_334671-101002732811"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Residents reported significant flooding and damage within ZIP 77026 via numerous tweets and 311 calls, with specific references to the Theater District and several infrastructure impacts (e.g., tweet_902889458860785664, 311_101002730057). However, high-resolution satellite imagery indicates no widespread residential flooding, submerged roads, or structural damage in the area, although it confirms localized flooding due to the overflow of the Buffalo Bayou impacting adjacent low-lying industrial and undeveloped land.",
+          "zip": "77026",
+          "time_window": {
+            "start": "2017-08-28",
+            "end": "2017-09-03"
+          },
+          "estimates": {
+            "flood_impact_pct": 45.0,
+            "roads_impacted": [
+              "Multiple roads and bridges requiring barricades due to damage or obstruction"
+            ],
+            "confidence": 0.9
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0952100w294630n",
+              "20170831bC0951930w294630n",
+              "20170831bC0951800w294630n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "While tweets and calls indicated significant flooding and damage in ZIP 77026, satellite imagery shows no substantial residential flooding or structural damage. The main issues appear localized, particularly near the Buffalo Bayou overflow affecting industrial areas."
+        },
+        "formatted": "Summary: While tweets and calls indicated significant flooding and damage in ZIP 77026, satellite imagery shows no substantial residential flooding or structural damage. The main issues appear localized, particularly near the Buffalo Bayou overflow affecting industrial areas.\nDamage Estimate: 45.0%\nConfidence: 0.9\nReasoning: Residents reported significant flooding and damage within ZIP 77026 via numerous tweets and 311 calls, with specific references to the Theater District and several infrastructure impacts (e.g., tweet_902889458860785664, 311_101002730057). However, high-resolution satellite imagery indicates no widespread residential flooding, submerged roads, or structural damage in the area, although it confirms localized flooding due to the overflow of the Buffalo Bayou impacting adjacent low-lying industrial and undeveloped land.",
+        "damage_pct": 45.0,
+        "confidence": 0.9
+      },
+      "ground_truth": {
+        "actual_damage_pct": 2.59,
+        "mean_depth_m": 2.59,
+        "max_depth_m": 21.267,
+        "flooded_pct": 72.32,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 5,
+      "query": {
+        "zip": "77028",
+        "start_date": "2017-08-29",
+        "end_date": "2017-09-04",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_902388226442264576",
+          "tweet_902835549135917056",
+          "tweet_902889458860785664",
+          "tweet_902910691132280832",
+          "tweet_902933605168685056",
+          "tweet_902952358958772224",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903399005224357889",
+          "tweet_903419965331697664",
+          "tweet_903656280010711042",
+          "tweet_903823717926567936",
+          "tweet_903834779384254465",
+          "tweet_903942638411374592",
+          "tweet_903992796763348992",
+          "tweet_904445834288406529",
+          "tweet_904750989122703361",
+          "tweet_904837837140484096"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_12164975-101002725961",
+          "311_12165335-101002726928",
+          "311_12165476-101002727284",
+          "311_12165614-101002727704",
+          "311_12165838-101002728360",
+          "311_101002728735",
+          "311_12166290-101002729907",
+          "311_12166300-101002729936",
+          "311_101002730637",
+          "311_101002731066",
+          "311_334671-101002732811",
+          "311_101002733113"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "While reports from local residents indicated significant flooding and road issues in ZIP 77028, high-resolution satellite imagery confirms no visible flooding or structural damage in the area. A specific request for help was noted at '7111 Homestead Rd' due to severe conditions, which aligns with reports of impacted local roads. However, the visual analysis with high confidence indicates clear highways and no signs of widespread flooding or damage, leading to a downgrade in the severity of the situation.",
+          "zip": "77028",
+          "time_window": {
+            "start": "2017-08-29",
+            "end": "2017-09-04"
+          },
+          "estimates": {
+            "flood_impact_pct": 0.0,
+            "roads_impacted": [
+              "Homestead Rd",
+              "Local roads and bridges"
+            ],
+            "confidence": 0.85
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0952100w294800n",
+              "20170831bC0951930w294800n",
+              "20170831bC0951800w294800n",
+              "20170831bC0951630w294800n",
+              "20170831bC0951500w294800n",
+              "20170831bC0952100w294930n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents reported significant flooding and road issues in ZIP 77028, with a specific request for help at '7111 Homestead Rd'. However, satellite imagery shows no visible flooding or structural damage in the area, leading to the conclusion that the situation is not as severe as initially indicated by local reports."
+        },
+        "formatted": "Summary: Residents reported significant flooding and road issues in ZIP 77028, with a specific request for help at '7111 Homestead Rd'. However, satellite imagery shows no visible flooding or structural damage in the area, leading to the conclusion that the situation is not as severe as initially indicated by local reports.\nDamage Estimate: 0.0%\nConfidence: 0.85\nReasoning: While reports from local residents indicated significant flooding and road issues in ZIP 77028, high-resolution satellite imagery confirms no visible flooding or structural damage in the area. A specific request for help was noted at '7111 Homestead Rd' due to severe conditions, which aligns with reports of impacted local roads. However, the visual analysis with high confidence indicates clear highways and no signs of widespread flooding or damage, leading to a downgrade in the severity of the situation.",
+        "damage_pct": 0.0,
+        "confidence": 0.85
+      },
+      "ground_truth": {
+        "actual_damage_pct": 2.653,
+        "mean_depth_m": 2.653,
+        "max_depth_m": 32.212,
+        "flooded_pct": 75.44,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 6,
+      "query": {
+        "zip": "77009",
+        "start_date": "2017-09-01",
+        "end_date": "2017-09-07",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_903419082963333120",
+          "tweet_903419965331697664",
+          "tweet_903422881648054277",
+          "tweet_903460810483265540",
+          "tweet_903656280010711042",
+          "tweet_903823717926567936",
+          "tweet_903834779384254465",
+          "tweet_903942638411374592",
+          "tweet_903992796763348992",
+          "tweet_904122831713251328",
+          "tweet_904123475685777409",
+          "tweet_904445834288406529",
+          "tweet_904837837140484096",
+          "tweet_905085480231993344",
+          "tweet_905120736003727362",
+          "tweet_905152576756137984",
+          "tweet_905219842688634882",
+          "tweet_905435273726746624",
+          "tweet_905450598950109185",
+          "tweet_905820640015511552"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_12166690-101002731433",
+          "311_12166763-101002731666",
+          "311_101002732628",
+          "311_334671-101002732811",
+          "311_101002733649",
+          "311_101002733717",
+          "311_101002734231",
+          "311_67723-101002734487",
+          "311_12167750-101002734684",
+          "311_12168320-101002736913",
+          "311_101002738217",
+          "311_101002738374"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Residents within ZIP 77009 have reported significant flooding and property damage due to Hurricane Harvey, with multiple tweets detailing the extensive impact. However, high-resolution satellite imagery indicates no visible flooding or structural damage in the area, resolving the conflict with a high level of confidence. While localized reports mention damage, the overall assessment shows no widespread flooding or infrastructure issues.",
+          "zip": "77009",
+          "time_window": {
+            "start": "2017-09-01",
+            "end": "2017-09-07"
+          },
+          "estimates": {
+            "flood_impact_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 1.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170901bC0952530w294930n",
+              "20170901bC0952230w294930n",
+              "20170901bC0952400w295100n",
+              "20170901bC0952530w295100n",
+              "20170901bC0952400w294930n",
+              "20170901bC0952230w295100n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "During the period from September 1 to September 7, 2017, residents reported significant flooding and property damage in ZIP 77009 due to Hurricane Harvey. However, high-resolution satellite imagery has confirmed that there was no visible flooding or structural damage in the area, indicating that the reports of damage may have been localized and not indicative of widespread issues."
+        },
+        "formatted": "Summary: During the period from September 1 to September 7, 2017, residents reported significant flooding and property damage in ZIP 77009 due to Hurricane Harvey. However, high-resolution satellite imagery has confirmed that there was no visible flooding or structural damage in the area, indicating that the reports of damage may have been localized and not indicative of widespread issues.\nDamage Estimate: 0.0%\nConfidence: 1.0\nReasoning: Residents within ZIP 77009 have reported significant flooding and property damage due to Hurricane Harvey, with multiple tweets detailing the extensive impact. However, high-resolution satellite imagery indicates no visible flooding or structural damage in the area, resolving the conflict with a high level of confidence. While localized reports mention damage, the overall assessment shows no widespread flooding or infrastructure issues.",
+        "damage_pct": 0.0,
+        "confidence": 1.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 4.225,
+        "mean_depth_m": 4.225,
+        "max_depth_m": 49.046,
+        "flooded_pct": 59.98,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 7,
+      "query": {
+        "zip": "77075",
+        "start_date": "2017-09-04",
+        "end_date": "2017-09-10",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_904696071812784128",
+          "tweet_904749993482969090",
+          "tweet_904837837140484096",
+          "tweet_905085480231993344",
+          "tweet_905152576756137984",
+          "tweet_905160043183693824",
+          "tweet_905219842688634882",
+          "tweet_905336770635685888",
+          "tweet_905430986497945600",
+          "tweet_905435273726746624",
+          "tweet_905450598950109185",
+          "tweet_905524226022674436",
+          "tweet_905820640015511552",
+          "tweet_905920666096078848",
+          "tweet_906122646525550594",
+          "tweet_906286568415088640",
+          "tweet_906336302513225728",
+          "tweet_906480493083983872",
+          "tweet_906567125384364032",
+          "tweet_906908668322512896"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_101002734231",
+          "311_12167750-101002734684",
+          "311_101002735626",
+          "311_12168320-101002736913",
+          "311_101002738374",
+          "311_101002738542",
+          "311_101002738767",
+          "311_101002739087",
+          "311_101002739519",
+          "311_101002739577",
+          "311_101002740854",
+          "311_12169274-101002741279"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Text reports indicate widespread residential and infrastructure damage attributed to Hurricane Harvey, with numerous tweets and 311 calls documenting home damage and impacts on road infrastructure. However, high-confidence satellite imagery confirms no visible flooding or structural damage across ZIP code 77075. This discrepancy leads to a reassessment of the severity of the reported damage due to the lack of visual evidence to support claims of widespread impact.",
+          "zip": "77075",
+          "time_window": {
+            "start": "2017-09-04",
+            "end": "2017-09-10"
+          },
+          "estimates": {
+            "flood_impact_pct": 0.0,
+            "roads_impacted": [
+              "Fondren and Bissonnet",
+              "Other roads due to bridge/barricade issues"
+            ],
+            "confidence": 0.85
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "9-10-2017_Ortho_ColorBalance_tile_024_015",
+              "9-10-2017_Ortho_ColorBalance_tile_029_004",
+              "9-10-2017_Ortho_ColorBalance_tile_018_021",
+              "9-10-2017_Ortho_ColorBalance_tile_020_016",
+              "9-10-2017_Ortho_ColorBalance_tile_023_004",
+              "9-10-2017_Ortho_ColorBalance_tile_029_023"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents in ZIP code 77075 reported significant house damage and road issues from Hurricane Harvey through social media and 311 calls. However, high-quality satellite imagery confirms no visible flooding or structural damage in the area. Therefore, while localized incidents were reported, there is no widespread damage evident."
+        },
+        "formatted": "Summary: Residents in ZIP code 77075 reported significant house damage and road issues from Hurricane Harvey through social media and 311 calls. However, high-quality satellite imagery confirms no visible flooding or structural damage in the area. Therefore, while localized incidents were reported, there is no widespread damage evident.\nDamage Estimate: 0.0%\nConfidence: 0.85\nReasoning: Text reports indicate widespread residential and infrastructure damage attributed to Hurricane Harvey, with numerous tweets and 311 calls documenting home damage and impacts on road infrastructure. However, high-confidence satellite imagery confirms no visible flooding or structural damage across ZIP code 77075. This discrepancy leads to a reassessment of the severity of the reported damage due to the lack of visual evidence to support claims of widespread impact.",
+        "damage_pct": 0.0,
+        "confidence": 0.85
+      },
+      "ground_truth": {
+        "actual_damage_pct": 3.141,
+        "mean_depth_m": 3.141,
+        "max_depth_m": 24.593,
+        "flooded_pct": 65.28,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 8,
+      "query": {
+        "zip": "77007",
+        "start_date": "2017-08-25",
+        "end_date": "2017-08-31",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_901086383942639617",
+          "tweet_901826476210876417",
+          "tweet_901849278003372034",
+          "tweet_901899756414357508",
+          "tweet_901901311779766272",
+          "tweet_901901604969959424",
+          "tweet_901917030970003457",
+          "tweet_901917813392199684",
+          "tweet_901952108655775744",
+          "tweet_901952250620379136",
+          "tweet_901976639000760320",
+          "tweet_902525075416547328",
+          "tweet_902526486233702400",
+          "tweet_902889458860785664",
+          "tweet_902933605168685056",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903399005224357889"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_12162603-101002719328",
+          "311_101002719744",
+          "311_12162747-101002719776",
+          "311_334166-101002720909",
+          "311_12164467-101002723606",
+          "311_12164586-101002724020",
+          "311_334241-101002724545",
+          "311_334244-101002724548",
+          "311_12164892-101002725533",
+          "311_12164975-101002725961",
+          "311_12165335-101002726928",
+          "311_12165476-101002727284"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Reports from both text and visual sources indicate significant flooding in ZIP code 77007 during the time of Hurricane Harvey. The text analysis highlights widespread flooding and damage, with specific local mentions of Waugh Drive and Spotts Park. However, high-resolution satellite imagery shows that while there is evidence of flooding, particularly near Buffalo Bayou, there are no visible signs of structural damage. The analysis confirms that floodwaters primarily affect parklands and residential properties adjacent to the bayou, but areas further from this vicinity appear largely unaffected. The Text Analyst's report mentioned significant flooding using strong descriptors, which seems to contradict the Visual Analyst's observations of no widespread structural damage. Thus, while localized reports of flooding are acknowledged, the overall impact is considered less severe than initially indicated by the Text Analyst due to the lack of visible structural damage in satellite imagery.",
+          "zip": "77007",
+          "time_window": {
+            "start": "2017-08-25",
+            "end": "2017-08-31"
+          },
+          "estimates": {
+            "flood_impact_pct": 70.0,
+            "roads_impacted": [
+              "Waugh Drive",
+              "Roads near Spotts Park",
+              "Major roadways near Buffalo Bayou"
+            ],
+            "confidence": 0.9
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0952700w294630n",
+              "20170831bC0952530w294630n",
+              "20170831bC0952400w294630n",
+              "20170831bC0952230w294630n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "While residents reported significant flooding and damage in the area of ZIP 77007 during Hurricane Harvey, satellite imagery confirms substantial water inundation mainly along Buffalo Bayou and surrounding parks. No structural damage is visible in the affected areas, which appears to align with reports of localized flooding but downplays the overall event's severity."
+        },
+        "formatted": "Summary: While residents reported significant flooding and damage in the area of ZIP 77007 during Hurricane Harvey, satellite imagery confirms substantial water inundation mainly along Buffalo Bayou and surrounding parks. No structural damage is visible in the affected areas, which appears to align with reports of localized flooding but downplays the overall event's severity.\nDamage Estimate: 70.0%\nConfidence: 0.9\nReasoning: Reports from both text and visual sources indicate significant flooding in ZIP code 77007 during the time of Hurricane Harvey. The text analysis highlights widespread flooding and damage, with specific local mentions of Waugh Drive and Spotts Park. However, high-resolution satellite imagery shows that while there is evidence of flooding, particularly near Buffalo Bayou, there are no visible signs of structural damage. The analysis confirms that floodwaters primarily affect parklands and residential properties adjacent to the bayou, but areas further from this vicinity appear largely unaffected. The Text Analyst's report mentioned significant flooding using strong descriptors, which seems to contradict the Visual Analyst's observations of no widespread structural damage. Thus, while localized reports of flooding are acknowledged, the overall impact is considered less severe than initially indicated by the Text Analyst due to the lack of visible structural damage in satellite imagery.",
+        "damage_pct": 70.0,
+        "confidence": 0.9
+      },
+      "ground_truth": {
+        "actual_damage_pct": 8.444,
+        "mean_depth_m": 8.444,
+        "max_depth_m": 51.995,
+        "flooded_pct": 37.79,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 9,
+      "query": {
+        "zip": "77088",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_901377628594196481",
+          "tweet_901377762476392449",
+          "tweet_901629053211480066",
+          "tweet_901826476210876417",
+          "tweet_901849278003372034",
+          "tweet_901917030970003457",
+          "tweet_901917813392199684",
+          "tweet_901952108655775744",
+          "tweet_901976639000760320",
+          "tweet_902388226442264576",
+          "tweet_902835549135917056",
+          "tweet_902889458860785664",
+          "tweet_902933605168685056",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903399005224357889",
+          "tweet_903419965331697664",
+          "tweet_903656280010711042"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_334166-101002720909",
+          "311_12164467-101002723606",
+          "311_12164586-101002724020",
+          "311_334241-101002724545",
+          "311_334244-101002724548",
+          "311_12164892-101002725533",
+          "311_12164975-101002725961",
+          "311_12165335-101002726928",
+          "311_101002727224",
+          "311_101002727891",
+          "311_101002728017",
+          "311_101002729312"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Residents reported significant flooding and storm damage in ZIP 77088, with tweets describing 'historic flooding' and damage from Hurricane Harvey. However, high-resolution satellite imagery indicates widespread flooding with significant standing water, but no structural damage has been confirmed, leading to some discrepancies in severity assessment.",
+          "zip": "77088",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "flood_impact_pct": 0.8,
+            "roads_impacted": [
+              "multiple roads with bridge or barricade issues"
+            ],
+            "confidence": 0.85
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170901bC0952700w295100n",
+              "20170901bC0953000w295230n",
+              "20170901bC0952700w295230n",
+              "20170901bC0952530w295230n",
+              "20170901bC0952830w295400n",
+              "20170901bC0952830w295700n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents in ZIP 77088 reported significant flooding and storm damage during the Hurricane Harvey event, with many tweets indicating extensive water inundation. Satellite imagery confirmed widespread flooding but did not find any visible structural damage, thereby suggesting that while flooding was extensive, the situation may not be as severe as initially indicated by the residents."
+        },
+        "formatted": "Summary: Residents in ZIP 77088 reported significant flooding and storm damage during the Hurricane Harvey event, with many tweets indicating extensive water inundation. Satellite imagery confirmed widespread flooding but did not find any visible structural damage, thereby suggesting that while flooding was extensive, the situation may not be as severe as initially indicated by the residents.\nDamage Estimate: 0.8%\nConfidence: 0.85\nReasoning: Residents reported significant flooding and storm damage in ZIP 77088, with tweets describing 'historic flooding' and damage from Hurricane Harvey. However, high-resolution satellite imagery indicates widespread flooding with significant standing water, but no structural damage has been confirmed, leading to some discrepancies in severity assessment.",
+        "damage_pct": 0.8,
+        "confidence": 0.85
+      },
+      "ground_truth": {
+        "actual_damage_pct": 2.526,
+        "mean_depth_m": 2.526,
+        "max_depth_m": 24.826,
+        "flooded_pct": 61.6,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    },
+    {
+      "query_id": 10,
+      "query": {
+        "zip": "77016",
+        "start_date": "2017-08-27",
+        "end_date": "2017-09-02",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "tweet_901629053211480066",
+          "tweet_901816298400821249",
+          "tweet_901826476210876417",
+          "tweet_901917030970003457",
+          "tweet_901917813392199684",
+          "tweet_901952108655775744",
+          "tweet_901976639000760320",
+          "tweet_902835549135917056",
+          "tweet_902889458860785664",
+          "tweet_902933605168685056",
+          "tweet_902967918874562560",
+          "tweet_903028781920788480",
+          "tweet_903081533124247553",
+          "tweet_903356586973913088",
+          "tweet_903419965331697664",
+          "tweet_903656280010711042",
+          "tweet_903823717926567936",
+          "tweet_903834779384254465",
+          "tweet_903942638411374592",
+          "tweet_903992796763348992"
+        ],
+        "gauge_count": 0,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "311_12164467-101002723606",
+          "311_12164586-101002724020",
+          "311_334241-101002724545",
+          "311_334244-101002724548",
+          "311_101002727067",
+          "311_101002727552",
+          "311_101002727947",
+          "311_101002729002",
+          "311_101002729007",
+          "311_101002729148",
+          "311_101002730161",
+          "311_101002732396"
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Residents reported significant flooding and power outages via Tweets and numerous 311 calls, indicating extensive physical damage within ZIP 77016. However, high-resolution satellite imagery confirms no visible flooding or structural damage in the area, leading to a discrepancy between on-the-ground reports and aerial observations. The visual analysis indicates complete confidence that roads remain clear and intact, suggesting localized issues may have been overstated.",
+          "zip": "77016",
+          "time_window": {
+            "start": "2017-08-27",
+            "end": "2017-09-02"
+          },
+          "estimates": {
+            "flood_impact_pct": 0.0,
+            "roads_impacted": [
+              "Unspecified local roads (limited to reported barricades)"
+            ],
+            "confidence": 1.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0952100w294930n",
+              "20170831bC0951930w294930n",
+              "20170831bC0951800w294930n",
+              "20170831bC0951630w294930n",
+              "20170901bC0951800w294930n",
+              "20170901bC0951630w294930n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents reported flooding and power outages, including calls about storm damage and road blockages. However, satellite imagery indicates no visible flooding or structural damage in the area, suggesting that while localized reports may reflect certain conditions, there is no evidence of widespread impact."
+        },
+        "formatted": "Summary: Residents reported flooding and power outages, including calls about storm damage and road blockages. However, satellite imagery indicates no visible flooding or structural damage in the area, suggesting that while localized reports may reflect certain conditions, there is no evidence of widespread impact.\nDamage Estimate: 0.0%\nConfidence: 1.0\nReasoning: Residents reported significant flooding and power outages via Tweets and numerous 311 calls, indicating extensive physical damage within ZIP 77016. However, high-resolution satellite imagery confirms no visible flooding or structural damage in the area, leading to a discrepancy between on-the-ground reports and aerial observations. The visual analysis indicates complete confidence that roads remain clear and intact, suggesting localized issues may have been overstated.",
+        "damage_pct": 0.0,
+        "confidence": 1.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 2.558,
+        "mean_depth_m": 2.558,
+        "max_depth_m": 56.721,
+        "flooded_pct": 66.86,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "data_dir": "data",
+  "provider": "openai",
+  "ground_truth": "claims",
+  "queries": [
+    {
+      "zip": "77002",
+      "start": "2017-08-26",
+      "end": "2017-08-30",
+      "k_tiles": 10,
+      "n_text": 20,
+      "comment": "Downtown Houston, peak flooding period"
+    },
+    {
+      "zip": "77089",
+      "start": "2017-08-27",
+      "end": "2017-08-31",
+      "k_tiles": 10,
+      "n_text": 20,
+      "comment": "Strong sensor+imagery overlap area"
+    },
+    {
+      "zip": "77096",
+      "start": "2017-08-25",
+      "end": "2017-09-05",
+      "k_tiles": 10,
+      "n_text": 20,
+      "comment": "Residential area, longer window"
+    },
+    {
+      "zip": "77063",
+      "start": "2017-08-26",
+      "end": "2017-08-29",
+      "k_tiles": 10,
+      "n_text": 20,
+      "comment": "West Houston area"
+    },
+    {
+      "zip": "77002",
+      "start": "2017-08-28",
+      "end": "2017-09-02",
+      "k_tiles": 10,
+      "n_text": 20,
+      "comment": "Downtown, extended window"
+    }
+  ]
+}

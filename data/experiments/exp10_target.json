@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "experiment_name": "exp10_target",
+    "timestamp": "2025-12-07T19:17:12.287160",
+    "config_path": "config/test_gauge.json",
+    "config_hash": "9e55d76a",
+    "settings": {
+      "enable_reranker": true,
+      "enable_geo_boost": false,
+      "dense_top_k": 1000
+    },
+    "total_queries": 1,
+    "summary_stats": {
+      "successful_queries": 1,
+      "failed_queries": 0,
+      "mae": 21.054,
+      "max_error": 21.054,
+      "min_error": 21.054
+    }
+  },
+  "records": [
+    {
+      "query_id": 1,
+      "query": {
+        "zip": "77546",
+        "start_date": "2017-08-25",
+        "end_date": "2017-08-31",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "tweet_ids": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "gauge_count": 6,
+        "call_311_count": 12,
+        "call_311_ids": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "imagery_tile_count": 6,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Analysis of extreme rainfall exceeding 142 inches during Hurricane Harvey resulted in reports of flooding and damage from residents via Twitter and 311 calls. Nonetheless, high-resolution satellite imagery reveals localized flooding primarily affecting a golf course and some commercial structures, but no widespread flooding in residential areas or major roadways. Conflicting reports of severe flood damage must be downgraded due to visual evidence. A significant number of localized reports exist, but no structural damage is confirmed in the satellite imagery.",
+          "zip": "77546",
+          "time_window": {
+            "start": "2017-08-25",
+            "end": "2017-08-31"
+          },
+          "estimates": {
+            "flood_impact_pct": 25.0,
+            "roads_impacted": [
+              "General roads adjacent to the golf course"
+            ],
+            "confidence": 0.95
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n"
+            ],
+            "tweet_ids": [
+              "901086383942639617",
+              "901323184695382017",
+              "901377628594196481",
+              "901377762476392449",
+              "901479837122125825",
+              "901629053211480066",
+              "901826476210876417",
+              "901849278003372034",
+              "901859997184802816",
+              "901917030970003457",
+              "901917813392199684",
+              "901952108655775744",
+              "901976639000760320",
+              "902889458860785664",
+              "902933605168685056",
+              "902967918874562560",
+              "903028781920788480",
+              "903081533124247553",
+              "903356586973913088",
+              "903399005224357889"
+            ],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": [
+              "gauge_77546_2017-08-25",
+              "gauge_77546_2017-08-26",
+              "gauge_77546_2017-08-27",
+              "gauge_77546_2017-08-28",
+              "gauge_77546_2017-08-29",
+              "gauge_77546_2017-08-30"
+            ]
+          },
+          "natural_language_summary": "Residents of ZIP 77546 reported significant flooding and damage due to extreme rainfall during Hurricane Harvey, but satellite imagery shows no widespread flooding or structural damage in residential areas. Localized flooding is noticeable, particularly affecting a golf course and some commercial properties. Infrastructure issues include road blockages near the golf course."
+        },
+        "formatted": "Summary: Residents of ZIP 77546 reported significant flooding and damage due to extreme rainfall during Hurricane Harvey, but satellite imagery shows no widespread flooding or structural damage in residential areas. Localized flooding is noticeable, particularly affecting a golf course and some commercial properties. Infrastructure issues include road blockages near the golf course.\nDamage Estimate: 25.0%\nConfidence: 0.95\nCited Tweets: 901086383942639617, 901323184695382017, 901377628594196481, 901377762476392449, 901479837122125825\nReasoning: Analysis of extreme rainfall exceeding 142 inches during Hurricane Harvey resulted in reports of flooding and damage from residents via Twitter and 311 calls. Nonetheless, high-resolution satellite imagery reveals localized flooding primarily affecting a golf course and some commercial structures, but no widespread flooding in residential areas or major roadways. Conflicting reports of severe flood damage must be downgraded due to visual evidence. A significant number of localized reports exist, but no structural damage is confirmed in the satellite imagery.",
+        "damage_pct": 25.0,
+        "confidence": 0.95
+      },
+      "ground_truth": {
+        "actual_damage_pct": 3.946,
+        "mean_depth_m": 3.946,
+        "max_depth_m": 31.563,
+        "flooded_pct": 47.01,
+        "claim_count": 0,
+        "total_claim_amount": 0.0
+      }
+    }
+  ]
+}

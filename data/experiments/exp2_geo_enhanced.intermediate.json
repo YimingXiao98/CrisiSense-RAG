@@ -1,0 +1,1301 @@
+{
+  "metadata": {
+    "experiment_name": "exp2_geo_enhanced",
+    "timestamp": "2025-12-06T17:55:43.718308",
+    "config_path": "config/queries_validation_25.json",
+    "config_hash": "042ba467",
+    "settings": {
+      "enable_reranker": true,
+      "enable_geo_boost": true,
+      "dense_top_k": 1000
+    },
+    "total_queries": 25
+  },
+  "records": [
+    {
+      "query_id": 1,
+      "query": {
+        "zip": "77479",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 4,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "While Text Analysis reported no on-the-ground reports or incidents for ZIP code 77479 during the specified time window, the Visual Analysis confirmed widespread overbank flooding impacting adjacent green spaces and residential backyards. Despite no direct evidence of structural damage, localized flooding was noted. Hence, the Text Analysis indicates a lack of reported incidents, but Visual Analysis reveals significant localized inundation issues.",
+          "zip": "77479",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "Localized road inundation near the waterway"
+            ],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170901bC0953430w293730n",
+              "20170901bC0953430w293600n",
+              "20170901bC0953600w293600n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Text reports indicate no incidents in ZIP code 77479 during the specified period, while satellite imagery confirms localized flooding impacts in residential backyards bordering the river/bayou. No structural damage is visually confirmed."
+        },
+        "formatted": "Summary: Text reports indicate no incidents in ZIP code 77479 during the specified period, while satellite imagery confirms localized flooding impacts in residential backyards bordering the river/bayou. No structural damage is visually confirmed.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: While Text Analysis reported no on-the-ground reports or incidents for ZIP code 77479 during the specified time window, the Visual Analysis confirmed widespread overbank flooding impacting adjacent green spaces and residential backyards. Despite no direct evidence of structural damage, localized flooding was noted. Hence, the Text Analysis indicates a lack of reported incidents, but Visual Analysis reveals significant localized inundation issues.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 1.65,
+        "claim_count": 724,
+        "total_claim_amount": 34962508.78
+      }
+    },
+    {
+      "query_id": 2,
+      "query": {
+        "zip": "77486",
+        "start_date": "2017-09-04",
+        "end_date": "2017-09-10",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Both the Text Analyst and the Visual Analyst reports indicate no evidence of flooding or structural damage in the ZIP 77486 area during the specified time window. The Text Analysis revealed a complete absence of Tweets or 311 calls indicating any issues, corroborated by sensor data showing 0.0 inches of rainfall. Additionally, Visual Analysis using satellite imagery confirmed no visible flooding or structural damage, with high confidence in the observations. Furthermore, one image tile was partially obscured by cloud cover, but clear images consistently showed the area unaffected. Therefore, combining the outputs leads to a conclusive assessment of no active issues.",
+          "zip": "77486",
+          "time_window": {
+            "start": "2017-09-04",
+            "end": "2017-09-10"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.85
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "9-10-2017_Ortho_ColorBalance_tile_024_015",
+              "9-10-2017_Ortho_ColorBalance_tile_029_004",
+              "9-10-2017_Ortho_ColorBalance_tile_018_021",
+              "9-10-2017_Ortho_ColorBalance_tile_020_016",
+              "9-10-2017_Ortho_ColorBalance_tile_023_004",
+              "9-10-2017_Ortho_ColorBalance_tile_029_023"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No evidence of flooding or structural damage was observed in ZIP 77486 from September 4 to September 10, 2017. Residents did not report any issues via social media or 311 calls, and satellite imagery confirmed clear and dry conditions across the area with no visible damage."
+        },
+        "formatted": "Summary: No evidence of flooding or structural damage was observed in ZIP 77486 from September 4 to September 10, 2017. Residents did not report any issues via social media or 311 calls, and satellite imagery confirmed clear and dry conditions across the area with no visible damage.\nDamage Estimate: 0.0%\nConfidence: 0.85\nReasoning: Both the Text Analyst and the Visual Analyst reports indicate no evidence of flooding or structural damage in the ZIP 77486 area during the specified time window. The Text Analysis revealed a complete absence of Tweets or 311 calls indicating any issues, corroborated by sensor data showing 0.0 inches of rainfall. Additionally, Visual Analysis using satellite imagery confirmed no visible flooding or structural damage, with high confidence in the observations. Furthermore, one image tile was partially obscured by cloud cover, but clear images consistently showed the area unaffected. Therefore, combining the outputs leads to a conclusive assessment of no active issues.",
+        "damage_pct": 0.0,
+        "confidence": 0.85
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.03,
+        "claim_count": 6,
+        "total_claim_amount": 593718.0
+      }
+    },
+    {
+      "query_id": 3,
+      "query": {
+        "zip": "77058",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 3,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Reports from Text Analysis indicate no specific on-the-ground impact observations from Tweets or 311 Calls for ZIP 77058 during the specified time window. The absence of reported issues and low confidence level (0.1) highlights the lack of data available. Conversely, Visual Analysis shows evidence of significant water inundation (15%) affecting residential areas, specifically in an observed area within tile 20170901bC0950900w293730n; however, no structural damage was visible. The conflicting reports about flooding severity indicate localized inundation without full structural impacts, reflecting a need to downplay the overall impact.",
+          "zip": "77058",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "Partial inundation of residential streets noted in imagery."
+            ],
+            "confidence": 0.5
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170901bC0950900w293730n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "While there are no reports of structural damage or road blockages from local sources, significant localized flooding was documented in the area, particularly around residential streets. No buildings appear to have sustained damage during this period."
+        },
+        "formatted": "Summary: While there are no reports of structural damage or road blockages from local sources, significant localized flooding was documented in the area, particularly around residential streets. No buildings appear to have sustained damage during this period.\nDamage Estimate: 0.0%\nConfidence: 0.5\nReasoning: Reports from Text Analysis indicate no specific on-the-ground impact observations from Tweets or 311 Calls for ZIP 77058 during the specified time window. The absence of reported issues and low confidence level (0.1) highlights the lack of data available. Conversely, Visual Analysis shows evidence of significant water inundation (15%) affecting residential areas, specifically in an observed area within tile 20170901bC0950900w293730n; however, no structural damage was visible. The conflicting reports about flooding severity indicate localized inundation without full structural impacts, reflecting a need to downplay the overall impact.",
+        "damage_pct": 0.0,
+        "confidence": 0.5
+      },
+      "ground_truth": {
+        "actual_damage_pct": 1.79,
+        "claim_count": 855,
+        "total_claim_amount": 38021942.01
+      }
+    },
+    {
+      "query_id": 4,
+      "query": {
+        "zip": "77642",
+        "start_date": "2017-09-11",
+        "end_date": "2017-09-17",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "There is a complete absence of both on-the-ground reports and relevant sensor data indicating any impact during the specified period. The satellite imagery from 2017-09-10 shows no evidence of flooding or structural damage, providing a strong indication of minimal impact.",
+          "zip": "77642",
+          "time_window": {
+            "start": "2017-09-11",
+            "end": "2017-09-17"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "During the assessment period, there were no tweets or 311 calls reporting flooding or damage in ZIP code 77642. High-confidence satellite imagery further confirms that there was no flooding or structural damage observed. Overall, there is strong evidence suggesting the area was unaffected by any disasters during this time."
+        },
+        "formatted": "Summary: During the assessment period, there were no tweets or 311 calls reporting flooding or damage in ZIP code 77642. High-confidence satellite imagery further confirms that there was no flooding or structural damage observed. Overall, there is strong evidence suggesting the area was unaffected by any disasters during this time.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: There is a complete absence of both on-the-ground reports and relevant sensor data indicating any impact during the specified period. The satellite imagery from 2017-09-10 shows no evidence of flooding or structural damage, providing a strong indication of minimal impact.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.01,
+        "claim_count": 2,
+        "total_claim_amount": 285100.3
+      }
+    },
+    {
+      "query_id": 5,
+      "query": {
+        "zip": "77386",
+        "start_date": "2017-08-27",
+        "end_date": "2017-09-02",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "No on-the-ground reports were found for ZIP 77386 during the specified time window. However, satellite imagery indicates significant water inundation, specifically around residential areas near a major water body. The Visual Analyst has confirmed localized flooding, but no structural damage was observed. Given the high confidence (0.8) of the visual evidence, localized impacts are acknowledged, but general assessments for structural damage remain low.",
+          "zip": "77386",
+          "time_window": {
+            "start": "2017-08-27",
+            "end": "2017-09-02"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "Roads in the immediate vicinity of the water body"
+            ],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents did not report flooding via 311 calls, and no specific tweets were identified. Nevertheless, satellite imagery shows significant localized flooding affecting roads and residential structures near a major water body in ZIP 77386. High confidence imagery confirms no structural damage in the broader area."
+        },
+        "formatted": "Summary: Residents did not report flooding via 311 calls, and no specific tweets were identified. Nevertheless, satellite imagery shows significant localized flooding affecting roads and residential structures near a major water body in ZIP 77386. High confidence imagery confirms no structural damage in the broader area.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: No on-the-ground reports were found for ZIP 77386 during the specified time window. However, satellite imagery indicates significant water inundation, specifically around residential areas near a major water body. The Visual Analyst has confirmed localized flooding, but no structural damage was observed. Given the high confidence (0.8) of the visual evidence, localized impacts are acknowledged, but general assessments for structural damage remain low.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 2.41,
+        "claim_count": 452,
+        "total_claim_amount": 51300866.54
+      }
+    },
+    {
+      "query_id": 6,
+      "query": {
+        "zip": "77833",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "During the specified time window of 2017-08-26 to 2017-09-01, no ground reports were found, and the sensor data provided was irrelevant. Satellite imagery confirms significant flooding in the area but indicates no structural damage to buildings. Localized flooding could impact roads, particularly near overflowing waterways, but this does not appear widespread or severe according to the high-confidence visual analysis.",
+          "zip": "77833",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "Potential impact to roads adjacent to overflowing waterways"
+            ],
+            "confidence": 0.6
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n",
+              "20170831bC0952400w294800n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents did not report specific flooding or damage incidents in ZIP 77833 during the time of Hurricane Harvey. However, high-resolution satellite imagery confirmed widespread flooding affecting primarily low-lying areas, while buildings remained intact and roads showed some impacts due to floodwaters."
+        },
+        "formatted": "Summary: Residents did not report specific flooding or damage incidents in ZIP 77833 during the time of Hurricane Harvey. However, high-resolution satellite imagery confirmed widespread flooding affecting primarily low-lying areas, while buildings remained intact and roads showed some impacts due to floodwaters.\nDamage Estimate: 0.0%\nConfidence: 0.6\nReasoning: During the specified time window of 2017-08-26 to 2017-09-01, no ground reports were found, and the sensor data provided was irrelevant. Satellite imagery confirms significant flooding in the area but indicates no structural damage to buildings. Localized flooding could impact roads, particularly near overflowing waterways, but this does not appear widespread or severe according to the high-confidence visual analysis.",
+        "damage_pct": 0.0,
+        "confidence": 0.6
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.0,
+        "claim_count": 4,
+        "total_claim_amount": 8831.82
+      }
+    },
+    {
+      "query_id": 7,
+      "query": {
+        "zip": "77093",
+        "start_date": "2017-09-03",
+        "end_date": "2017-09-09",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "No relevant on-the-ground reports (Tweets, 311 calls) were provided for ZIP 77093 during the specified time window. The visual analysis indicates no evidence of flooding or structural damage, leading to a coherent conclusion between the two reports.",
+          "zip": "77093",
+          "time_window": {
+            "start": "2017-09-03",
+            "end": "2017-09-09"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No reports of flooding or damage were made by residents in the area. Satellite imagery confirms high confidence that there were no visible flooding or structural damage during the specified time period."
+        },
+        "formatted": "Summary: No reports of flooding or damage were made by residents in the area. Satellite imagery confirms high confidence that there were no visible flooding or structural damage during the specified time period.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: No relevant on-the-ground reports (Tweets, 311 calls) were provided for ZIP 77093 during the specified time window. The visual analysis indicates no evidence of flooding or structural damage, leading to a coherent conclusion between the two reports.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.0,
+        "claim_count": 6,
+        "total_claim_amount": 96468.45
+      }
+    },
+    {
+      "query_id": 8,
+      "query": {
+        "zip": "77539",
+        "start_date": "2017-08-27",
+        "end_date": "2017-09-02",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "The Text Analyst found no relevant reports for ZIP code 77539 during the specified time, indicating a confidence level of 0.0 in estimating structural damage or road impacts. In contrast, the Visual Analyst's satellite imagery shows extensive flooding in certain areas, though no structural damage was identifiable. Due to the lack of ground truth reports, I acknowledge the discrepancy but report localized flooding issues as observed in the satellite imagery.",
+          "zip": "77539",
+          "time_window": {
+            "start": "2017-08-27",
+            "end": "2017-09-02"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "multiple residential streets near the golf course"
+            ],
+            "confidence": 0.45
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n",
+              "20170831bC0950730w294930n",
+              "20170831bC0952400w294800n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "While no specific tweets or 311 call reports were found for flooding or damage in ZIP code 77539 during the given period, satellite imagery indicates significant flooding in localized areas, particularly affecting residential streets near a golf course. Nonetheless, there was no observed structural damage, confirming strong evidence of inundation without structural impact."
+        },
+        "formatted": "Summary: While no specific tweets or 311 call reports were found for flooding or damage in ZIP code 77539 during the given period, satellite imagery indicates significant flooding in localized areas, particularly affecting residential streets near a golf course. Nonetheless, there was no observed structural damage, confirming strong evidence of inundation without structural impact.\nDamage Estimate: 0.0%\nConfidence: 0.45\nReasoning: The Text Analyst found no relevant reports for ZIP code 77539 during the specified time, indicating a confidence level of 0.0 in estimating structural damage or road impacts. In contrast, the Visual Analyst's satellite imagery shows extensive flooding in certain areas, though no structural damage was identifiable. Due to the lack of ground truth reports, I acknowledge the discrepancy but report localized flooding issues as observed in the satellite imagery.",
+        "damage_pct": 0.0,
+        "confidence": 0.45
+      },
+      "ground_truth": {
+        "actual_damage_pct": 13.84,
+        "claim_count": 3200,
+        "total_claim_amount": 294049576.8
+      }
+    },
+    {
+      "query_id": 9,
+      "query": {
+        "zip": "77546",
+        "start_date": "2017-09-06",
+        "end_date": "2017-09-12",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Both the Text Analyst and Visual Analyst reports indicate no evidence of flooding or structural damage in the ZIP code 77546 during the specified time frame. The Text Analyst found no relevant tweets or 311 calls suggesting issues, while the Visual Analyst confirmed through satellite imagery that no flooding or structural damage was observable. Despite one imagery tile being obscured by cloud cover, it did not affect the overall assessment as clear observations were made in other tiles.",
+          "zip": "77546",
+          "time_window": {
+            "start": "2017-09-06",
+            "end": "2017-09-12"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.9
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "9-10-2017_Ortho_ColorBalance_tile_024_015",
+              "9-10-2017_Ortho_ColorBalance_tile_029_004",
+              "9-10-2017_Ortho_ColorBalance_tile_018_021",
+              "9-10-2017_Ortho_ColorBalance_tile_020_016",
+              "9-10-2017_Ortho_ColorBalance_tile_023_004",
+              "9-10-2017_Ortho_ColorBalance_tile_029_023"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No reports of flooding or structural damage were identified in ZIP 77546 between September 6 and September 12, 2017. Satellite imagery supports this conclusion, with clear roads and no indications of water inundation."
+        },
+        "formatted": "Summary: No reports of flooding or structural damage were identified in ZIP 77546 between September 6 and September 12, 2017. Satellite imagery supports this conclusion, with clear roads and no indications of water inundation.\nDamage Estimate: 0.0%\nConfidence: 0.9\nReasoning: Both the Text Analyst and Visual Analyst reports indicate no evidence of flooding or structural damage in the ZIP code 77546 during the specified time frame. The Text Analyst found no relevant tweets or 311 calls suggesting issues, while the Visual Analyst confirmed through satellite imagery that no flooding or structural damage was observable. Despite one imagery tile being obscured by cloud cover, it did not affect the overall assessment as clear observations were made in other tiles.",
+        "damage_pct": 0.0,
+        "confidence": 0.9
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.01,
+        "claim_count": 11,
+        "total_claim_amount": 306077.04
+      }
+    },
+    {
+      "query_id": 10,
+      "query": {
+        "zip": "77043",
+        "start_date": "2017-08-25",
+        "end_date": "2017-08-31",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Despite the presence of significant flooding in the broader area surrounding ZIP 77043, no specific incidents were reported via tweets or 311 calls during the specified timeframe. The satellite imagery confirms severe flooding along the Buffalo Bayou but indicates no structural damage. Hence, the concerns about localized flooding reported in the area may not reflect extensive or severe conditions.",
+          "zip": "77043",
+          "time_window": {
+            "start": "2017-08-25",
+            "end": "2017-08-31"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n",
+              "20170831bC0953430w294630n",
+              "20170831bC0953300w294630n",
+              "20170831bC0953130w294630n",
+              "20170831bC0953600w294800n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents in ZIP 77043 did not report any incidents via tweets or 311 calls between August 25 and August 31, 2017. While satellite imagery indicates severe flooding in the surrounding areas, especially along the Buffalo Bayou, there is no confirmation of structural damage within this ZIP code. Localized flooding may be present, but it does not seem widespread or severe based on the available data."
+        },
+        "formatted": "Summary: Residents in ZIP 77043 did not report any incidents via tweets or 311 calls between August 25 and August 31, 2017. While satellite imagery indicates severe flooding in the surrounding areas, especially along the Buffalo Bayou, there is no confirmation of structural damage within this ZIP code. Localized flooding may be present, but it does not seem widespread or severe based on the available data.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: Despite the presence of significant flooding in the broader area surrounding ZIP 77043, no specific incidents were reported via tweets or 311 calls during the specified timeframe. The satellite imagery confirms severe flooding along the Buffalo Bayou but indicates no structural damage. Hence, the concerns about localized flooding reported in the area may not reflect extensive or severe conditions.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.67,
+        "claim_count": 363,
+        "total_claim_amount": 14163250.14
+      }
+    },
+    {
+      "query_id": 11,
+      "query": {
+        "zip": "77086",
+        "start_date": "2017-08-29",
+        "end_date": "2017-09-04",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "There are no reports of structural damage or road impacts for ZIP code 77086 during the specified period. Both the Text Analyst and Visual Analyst found no evidence of flooding or structural damage.",
+          "zip": "77086",
+          "time_window": {
+            "start": "2017-08-29",
+            "end": "2017-09-04"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No incidents of flooding or structural damage were reported in ZIP code 77086 between August 29 and September 4, 2017. High-resolution imagery confirmed that roads and structures were intact and free from any visible water or blockage."
+        },
+        "formatted": "Summary: No incidents of flooding or structural damage were reported in ZIP code 77086 between August 29 and September 4, 2017. High-resolution imagery confirmed that roads and structures were intact and free from any visible water or blockage.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: There are no reports of structural damage or road impacts for ZIP code 77086 during the specified period. Both the Text Analyst and Visual Analyst found no evidence of flooding or structural damage.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.01,
+        "claim_count": 9,
+        "total_claim_amount": 154445.46
+      }
+    },
+    {
+      "query_id": 12,
+      "query": {
+        "zip": "77029",
+        "start_date": "2017-08-29",
+        "end_date": "2017-09-04",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Both the Text Analyst and Visual Analyst reports indicate a lack of evidence for flooding or structural damage in ZIP code 77029 during the specified timeframe. The Text Analyst found no relevant reports, while the Visual Analyst's high-confidence imagery analysis confirms no visible flooding or damage.",
+          "zip": "77029",
+          "time_window": {
+            "start": "2017-08-29",
+            "end": "2017-09-04"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.95
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0951930w294630n",
+              "20170831bC0951800w294630n",
+              "20170831bC0951630w294630n",
+              "20170831bC0951500w294630n",
+              "20170831bC0951330w294630n",
+              "20170831bC0951930w294800n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No reports of flooding or structural damage were found for ZIP 77029 between August 29 and September 4, 2017. High-resolution satellite imagery confirms no visible flooding or damage in the area."
+        },
+        "formatted": "Summary: No reports of flooding or structural damage were found for ZIP 77029 between August 29 and September 4, 2017. High-resolution satellite imagery confirms no visible flooding or damage in the area.\nDamage Estimate: 0.0%\nConfidence: 0.95\nReasoning: Both the Text Analyst and Visual Analyst reports indicate a lack of evidence for flooding or structural damage in ZIP code 77029 during the specified timeframe. The Text Analyst found no relevant reports, while the Visual Analyst's high-confidence imagery analysis confirms no visible flooding or damage.",
+        "damage_pct": 0.0,
+        "confidence": 0.95
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.06,
+        "claim_count": 60,
+        "total_claim_amount": 1259532.03
+      }
+    },
+    {
+      "query_id": 13,
+      "query": {
+        "zip": "78412",
+        "start_date": "2017-08-25",
+        "end_date": "2017-08-31",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "The analysis for ZIP 78412 from 2017-08-25 to 2017-08-31 indicates no direct on-the-ground reports via Tweets or 311 calls. However, visual analysis reveals significant water inundation in recreational areas without impacting residential structures. Therefore, any local reports may indicate isolated issues but do not reflect widespread flooding or structural damage overall.",
+          "zip": "78412",
+          "time_window": {
+            "start": "2017-08-25",
+            "end": "2017-08-31"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.1
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents did not report any flooding or damage in Tweets or 311 calls, and high-resolution satellite imagery confirms no widespread flooding or structural damage, although there is significant inundation noted in a golf course area."
+        },
+        "formatted": "Summary: Residents did not report any flooding or damage in Tweets or 311 calls, and high-resolution satellite imagery confirms no widespread flooding or structural damage, although there is significant inundation noted in a golf course area.\nDamage Estimate: 0.0%\nConfidence: 0.1\nReasoning: The analysis for ZIP 78412 from 2017-08-25 to 2017-08-31 indicates no direct on-the-ground reports via Tweets or 311 calls. However, visual analysis reveals significant water inundation in recreational areas without impacting residential structures. Therefore, any local reports may indicate isolated issues but do not reflect widespread flooding or structural damage overall.",
+        "damage_pct": 0.0,
+        "confidence": 0.1
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.01,
+        "claim_count": 64,
+        "total_claim_amount": 267989.38
+      }
+    },
+    {
+      "query_id": 14,
+      "query": {
+        "zip": "77089",
+        "start_date": "2017-09-01",
+        "end_date": "2017-09-07",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "No on-the-ground reports were found for ZIP 77089 during the specified time period 2017-09-01 to 2017-09-07. Both Text Analysis and Visual Analysis confirm the absence of significant flooding and structural damage, with high confidence from satellite imagery.",
+          "zip": "77089",
+          "time_window": {
+            "start": "2017-09-01",
+            "end": "2017-09-07"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170901bC0951500w294030n",
+              "20170901bC0951500w293730n",
+              "20170901bC0951330w294200n",
+              "20170901bC0951630w293900n",
+              "20170901bC0951500w293900n",
+              "20170901bC0951630w294030n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Both the Text Analyst and Visual Analyst found no evidence of flooding or structural damage in ZIP 77089 during the specified period. High-resolution satellite imagery confirms that roads and residential areas were clear and dry, indicating no widespread impact."
+        },
+        "formatted": "Summary: Both the Text Analyst and Visual Analyst found no evidence of flooding or structural damage in ZIP 77089 during the specified period. High-resolution satellite imagery confirms that roads and residential areas were clear and dry, indicating no widespread impact.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: No on-the-ground reports were found for ZIP 77089 during the specified time period 2017-09-01 to 2017-09-07. Both Text Analysis and Visual Analysis confirm the absence of significant flooding and structural damage, with high confidence from satellite imagery.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.05,
+        "claim_count": 33,
+        "total_claim_amount": 965483.43
+      }
+    },
+    {
+      "query_id": 15,
+      "query": {
+        "zip": "77017",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "No direct reports from Text Analysis indicate any impact or damage in ZIP 77017 during the specified time. Visual Analysis indicates significant inundation around Sims Bayou and Brays Bayou; however, this flooding does not appear to be affecting major roads or causing structural damage. While localized flooding is confirmed near recreational areas and residential yards, the absence of significant structural damage in satellite imagery leads to downgrading the overall impact severity.",
+          "zip": "77017",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.85
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0951630w294200n",
+              "20170831bC0951930w294330n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents did not report widespread flooding via Tweets or 311 calls. Satellite imagery confirms significant inundation around residential areas and recreational spaces near Sims and Brays Bayou but shows no structural damage or blockage on major roads. Flooding appears localized, particularly affecting golf courses and parklands."
+        },
+        "formatted": "Summary: Residents did not report widespread flooding via Tweets or 311 calls. Satellite imagery confirms significant inundation around residential areas and recreational spaces near Sims and Brays Bayou but shows no structural damage or blockage on major roads. Flooding appears localized, particularly affecting golf courses and parklands.\nDamage Estimate: 0.0%\nConfidence: 0.85\nReasoning: No direct reports from Text Analysis indicate any impact or damage in ZIP 77017 during the specified time. Visual Analysis indicates significant inundation around Sims Bayou and Brays Bayou; however, this flooding does not appear to be affecting major roads or causing structural damage. While localized flooding is confirmed near recreational areas and residential yards, the absence of significant structural damage in satellite imagery leads to downgrading the overall impact severity.",
+        "damage_pct": 0.0,
+        "confidence": 0.85
+      },
+      "ground_truth": {
+        "actual_damage_pct": 1.14,
+        "claim_count": 372,
+        "total_claim_amount": 24327468.51
+      }
+    },
+    {
+      "query_id": 16,
+      "query": {
+        "zip": "77407",
+        "start_date": "2017-09-01",
+        "end_date": "2017-09-07",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "The Text Analyst found no relevant reports of flooding or structural damage for ZIP 77407 during the specified time window, leading to very low confidence in the assessment. Conversely, the Visual Analyst confirmed localized flooding affecting natural areas and a road/utility corridor in one imagery tile, but overall indicated that residential areas showed no signs of flooding or structural damage. This discrepancy highlights the localized nature of the flooding.",
+          "zip": "77407",
+          "time_window": {
+            "start": "2017-09-01",
+            "end": "2017-09-07"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "Partially submerged road/utility corridor in Area2_post_reshaped_tile_018_001"
+            ],
+            "confidence": 0.5
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "Area2_post_reshaped_tile_018_001"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No widespread flooding or structural damage was reported by residents in ZIP 77407. However, satellite imagery indicates localized flooding in natural areas and a road/utility corridor. Overall, the residential neighborhoods appeared unaffected, aligning with the low confidence level from the Text Analyst."
+        },
+        "formatted": "Summary: No widespread flooding or structural damage was reported by residents in ZIP 77407. However, satellite imagery indicates localized flooding in natural areas and a road/utility corridor. Overall, the residential neighborhoods appeared unaffected, aligning with the low confidence level from the Text Analyst.\nDamage Estimate: 0.0%\nConfidence: 0.5\nReasoning: The Text Analyst found no relevant reports of flooding or structural damage for ZIP 77407 during the specified time window, leading to very low confidence in the assessment. Conversely, the Visual Analyst confirmed localized flooding affecting natural areas and a road/utility corridor in one imagery tile, but overall indicated that residential areas showed no signs of flooding or structural damage. This discrepancy highlights the localized nature of the flooding.",
+        "damage_pct": 0.0,
+        "confidence": 0.5
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.01,
+        "claim_count": 6,
+        "total_claim_amount": 305258.72
+      }
+    },
+    {
+      "query_id": 17,
+      "query": {
+        "zip": "77520",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 2,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "During the time window of 2017-08-26 to 2017-09-01, there were no reported incidents of flooding or structural damage based on the Text Analysis report. The visual analysis from satellite imagery confirms that there was no visible flooding or significant structural damage in the ZIP 77520 area, with high confidence. The absence of reports and the high certainty of the visual evidence suggest that the area remained unaffected during the specified period.",
+          "zip": "77520",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.1
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0950130w294630n",
+              "20170831bC0950130w294800n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No relevant reports of flooding or damage were found for ZIP 77520 during the specified period. High-resolution satellite imagery confirms no visible flooding or structural damage, indicating the area experienced no significant impact."
+        },
+        "formatted": "Summary: No relevant reports of flooding or damage were found for ZIP 77520 during the specified period. High-resolution satellite imagery confirms no visible flooding or structural damage, indicating the area experienced no significant impact.\nDamage Estimate: 0.0%\nConfidence: 0.1\nReasoning: During the time window of 2017-08-26 to 2017-09-01, there were no reported incidents of flooding or structural damage based on the Text Analysis report. The visual analysis from satellite imagery confirms that there was no visible flooding or significant structural damage in the ZIP 77520 area, with high confidence. The absence of reports and the high certainty of the visual evidence suggest that the area remained unaffected during the specified period.",
+        "damage_pct": 0.0,
+        "confidence": 0.1
+      },
+      "ground_truth": {
+        "actual_damage_pct": 1.27,
+        "claim_count": 862,
+        "total_claim_amount": 26879416.49
+      }
+    },
+    {
+      "query_id": 18,
+      "query": {
+        "zip": "77571",
+        "start_date": "2017-09-02",
+        "end_date": "2017-09-08",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Both the Text Analysis and Visual Analysis indicate no impact for ZIP 77571 during the specified timeframe. The Text Analysis reports no on-the-ground evidence of flooding or damage, while the Visual Analysis confirms no visible flooding or structural damage based on high-confidence satellite imagery. Additionally, the sensor data, although dated, reinforces the lack of rainfall during the observed period.",
+          "zip": "77571",
+          "time_window": {
+            "start": "2017-09-02",
+            "end": "2017-09-08"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.1
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "9-10-2017_Ortho_ColorBalance_tile_024_015",
+              "9-10-2017_Ortho_ColorBalance_tile_029_004",
+              "9-10-2017_Ortho_ColorBalance_tile_018_021",
+              "9-10-2017_Ortho_ColorBalance_tile_020_016",
+              "9-10-2017_Ortho_ColorBalance_tile_023_004",
+              "9-10-2017_Ortho_ColorBalance_tile_029_023"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No reports of flooding or structural damage were documented in ZIP 77571 from September 2 to September 8, 2017. High-resolution satellite imagery confirms clear and dry conditions with no visible impacts."
+        },
+        "formatted": "Summary: No reports of flooding or structural damage were documented in ZIP 77571 from September 2 to September 8, 2017. High-resolution satellite imagery confirms clear and dry conditions with no visible impacts.\nDamage Estimate: 0.0%\nConfidence: 0.1\nReasoning: Both the Text Analysis and Visual Analysis indicate no impact for ZIP 77571 during the specified timeframe. The Text Analysis reports no on-the-ground evidence of flooding or damage, while the Visual Analysis confirms no visible flooding or structural damage based on high-confidence satellite imagery. Additionally, the sensor data, although dated, reinforces the lack of rainfall during the observed period.",
+        "damage_pct": 0.0,
+        "confidence": 0.1
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.01,
+        "claim_count": 9,
+        "total_claim_amount": 133916.73
+      }
+    },
+    {
+      "query_id": 19,
+      "query": {
+        "zip": "77521",
+        "start_date": "2017-08-31",
+        "end_date": "2017-09-06",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 3,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Both sources report a lack of evidence for flooding or structural damage in ZIP 77521 during the specified time. The Text Analysis has no reports of tweets or calls indicating any incidents, and the Visual Analysis confirms no visible flooding or structural damage in the analyzed satellite imagery despite the limited scope. The confidence in the findings from the imagery is somewhat lower, but still indicates no significant damage.",
+          "zip": "77521",
+          "time_window": {
+            "start": "2017-08-31",
+            "end": "2017-09-06"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0950130w294630n",
+              "20170831bC0950130w294800n",
+              "20170831bC0950130w294930n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Analysis confirms no evidence of flooding or structural damage in ZIP 77521 from August 31 to September 6, 2017. Satellite imagery and the absence of tweets or 311 calls support this conclusion. All imagery tiles reviewed show no clear indications of water inundation or damage."
+        },
+        "formatted": "Summary: Analysis confirms no evidence of flooding or structural damage in ZIP 77521 from August 31 to September 6, 2017. Satellite imagery and the absence of tweets or 311 calls support this conclusion. All imagery tiles reviewed show no clear indications of water inundation or damage.\nDamage Estimate: 0.0%\nConfidence: 0.0\nReasoning: Both sources report a lack of evidence for flooding or structural damage in ZIP 77521 during the specified time. The Text Analysis has no reports of tweets or calls indicating any incidents, and the Visual Analysis confirms no visible flooding or structural damage in the analyzed satellite imagery despite the limited scope. The confidence in the findings from the imagery is somewhat lower, but still indicates no significant damage.",
+        "damage_pct": 0.0,
+        "confidence": 0.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.04,
+        "claim_count": 34,
+        "total_claim_amount": 813844.3
+      }
+    },
+    {
+      "query_id": 20,
+      "query": {
+        "zip": "77468",
+        "start_date": "2017-08-27",
+        "end_date": "2017-09-02",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "There were no on-the-ground reports or relevant sensor data found for ZIP 77468 during the specified time frame. While the visual analysis indicates localized flooding adjacent to river/bayou systems, the overall structural damage is assessed as zero. High-resolution satellite imagery confirms no widespread structural issues, which downgrades the severity despite some minor localized inundation cues.",
+          "zip": "77468",
+          "time_window": {
+            "start": "2017-08-27",
+            "end": "2017-09-02"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.1
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n",
+              "20170831bC0952400w294800n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Satellite imagery shows significant localized flooding affecting a golf course and adjacent peripheral areas due to river overflow. However, there is no visible flooding or structural damage in the majority of residential neighborhoods and main roads, which confirms low potential damage in the assessed region."
+        },
+        "formatted": "Summary: Satellite imagery shows significant localized flooding affecting a golf course and adjacent peripheral areas due to river overflow. However, there is no visible flooding or structural damage in the majority of residential neighborhoods and main roads, which confirms low potential damage in the assessed region.\nDamage Estimate: 0.0%\nConfidence: 0.1\nReasoning: There were no on-the-ground reports or relevant sensor data found for ZIP 77468 during the specified time frame. While the visual analysis indicates localized flooding adjacent to river/bayou systems, the overall structural damage is assessed as zero. High-resolution satellite imagery confirms no widespread structural issues, which downgrades the severity despite some minor localized inundation cues.",
+        "damage_pct": 0.0,
+        "confidence": 0.1
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.02,
+        "claim_count": 8,
+        "total_claim_amount": 502204.24
+      }
+    },
+    {
+      "query_id": 21,
+      "query": {
+        "zip": "77096",
+        "start_date": "2017-08-27",
+        "end_date": "2017-09-02",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "The Text Analyst provided no relevant reports indicating flooding or damage in ZIP 77096 during the specified time window, and confidence is extremely low. Meanwhile, the Visual Analyst confirmed the absence of visible flooding or structural damage, demonstrating high confidence. Therefore, the overall assessment indicates no impact.",
+          "zip": "77096",
+          "time_window": {
+            "start": "2017-08-27",
+            "end": "2017-09-02"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 1.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953300w294200n",
+              "20170831bC0953130w294200n",
+              "20170831bC0953000w294200n",
+              "20170831bC0952830w294200n",
+              "20170831bC0952700w294200n",
+              "20170831bC0953300w294330n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "There are no reports of flooding or structural damage in ZIP 77096 based on both text and visual analysis. High-resolution satellite imagery confirms no visible flooding and intact structures across the area with all roads appearing clear."
+        },
+        "formatted": "Summary: There are no reports of flooding or structural damage in ZIP 77096 based on both text and visual analysis. High-resolution satellite imagery confirms no visible flooding and intact structures across the area with all roads appearing clear.\nDamage Estimate: 0.0%\nConfidence: 1.0\nReasoning: The Text Analyst provided no relevant reports indicating flooding or damage in ZIP 77096 during the specified time window, and confidence is extremely low. Meanwhile, the Visual Analyst confirmed the absence of visible flooding or structural damage, demonstrating high confidence. Therefore, the overall assessment indicates no impact.",
+        "damage_pct": 0.0,
+        "confidence": 1.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 33.33,
+        "claim_count": 5400,
+        "total_claim_amount": 708299299.5
+      }
+    },
+    {
+      "query_id": 22,
+      "query": {
+        "zip": "77045",
+        "start_date": "2017-08-27",
+        "end_date": "2017-09-02",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "No on-the-ground reports were found for ZIP 77045 during the specified time frame, supported by sensor data showing 0.0 inches of rainfall, indicating no impact. High-confidence satellite imagery confirms no visible flooding or structural damage, thus supporting the lack of evidence found in text sources.",
+          "zip": "77045",
+          "time_window": {
+            "start": "2017-08-27",
+            "end": "2017-09-02"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 1.0
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No reports of flooding or structural damage were identified in ZIP 77045 during the specified period. High-confidence satellite imagery confirms that roads and residential areas remained dry, with no signs of flooding or damage."
+        },
+        "formatted": "Summary: No reports of flooding or structural damage were identified in ZIP 77045 during the specified period. High-confidence satellite imagery confirms that roads and residential areas remained dry, with no signs of flooding or damage.\nDamage Estimate: 0.0%\nConfidence: 1.0\nReasoning: No on-the-ground reports were found for ZIP 77045 during the specified time frame, supported by sensor data showing 0.0 inches of rainfall, indicating no impact. High-confidence satellite imagery confirms no visible flooding or structural damage, thus supporting the lack of evidence found in text sources.",
+        "damage_pct": 0.0,
+        "confidence": 1.0
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.09,
+        "claim_count": 165,
+        "total_claim_amount": 1826504.88
+      }
+    },
+    {
+      "query_id": 23,
+      "query": {
+        "zip": "77089",
+        "start_date": "2017-08-26",
+        "end_date": "2017-09-01",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Both the Text Analysis and Visual Analysis report a lack of significant flooding or structural damage in ZIP 77089 during the specified time window. The Text Analyst reports no relevant on-the-ground data, while the Visual Analyst confirms that satellite imagery shows no visible flooding or damage with high confidence. Hence, the overall assessment is consistent across both sources.",
+          "zip": "77089",
+          "time_window": {
+            "start": "2017-08-26",
+            "end": "2017-09-01"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [],
+            "confidence": 0.9
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0951500w294200n",
+              "20170831bC0951800w294200n",
+              "20170831bC0951330w294200n",
+              "20170831bC0951630w294200n",
+              "20170901bC0951500w294030n",
+              "20170901bC0951500w293730n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "No on-the-ground reports were provided for the period from August 26 to September 1, 2017, regarding ZIP 77089. High-resolution satellite imagery confirms no visible widespread flooding or structural damage in the area, supporting a low-impact assessment."
+        },
+        "formatted": "Summary: No on-the-ground reports were provided for the period from August 26 to September 1, 2017, regarding ZIP 77089. High-resolution satellite imagery confirms no visible widespread flooding or structural damage in the area, supporting a low-impact assessment.\nDamage Estimate: 0.0%\nConfidence: 0.9\nReasoning: Both the Text Analysis and Visual Analysis report a lack of significant flooding or structural damage in ZIP 77089 during the specified time window. The Text Analyst reports no relevant on-the-ground data, while the Visual Analyst confirms that satellite imagery shows no visible flooding or damage with high confidence. Hence, the overall assessment is consistent across both sources.",
+        "damage_pct": 0.0,
+        "confidence": 0.9
+      },
+      "ground_truth": {
+        "actual_damage_pct": 19.65,
+        "claim_count": 6147,
+        "total_claim_amount": 417501101.49
+      }
+    },
+    {
+      "query_id": 24,
+      "query": {
+        "zip": "77080",
+        "start_date": "2017-08-29",
+        "end_date": "2017-09-04",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "Text analysis shows no relevant reports from residents for ZIP 77080 during the specified time, leading to a very low confidence in any impact. In contrast, visual analysis confirms significant flooding due to the overflowing Buffalo Bayou but shows no structural damage to buildings or infrastructure. Despite the flooding visible in imagery, the lack of localized reports in the text analysis suggests that impacts are not widespread, but localized areas may be affected near the bayou.",
+          "zip": "77080",
+          "time_window": {
+            "start": "2017-08-29",
+            "end": "2017-09-04"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "Local roads adjacent to the Buffalo Bayou"
+            ],
+            "confidence": 0.05
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953430w294630n",
+              "20170831bC0953300w294630n",
+              "20170831bC0953130w294630n",
+              "20170831bC0953000w294630n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "While significant flooding was observed in satellite imagery, especially around the Buffalo Bayou and Memorial Park Golf Course, there were no relevant resident-reported incidents such as tweets or 311 calls for flooding or damage in ZIP 77080. This discrepancy indicates localized flooding situations without structural damage or widespread impact."
+        },
+        "formatted": "Summary: While significant flooding was observed in satellite imagery, especially around the Buffalo Bayou and Memorial Park Golf Course, there were no relevant resident-reported incidents such as tweets or 311 calls for flooding or damage in ZIP 77080. This discrepancy indicates localized flooding situations without structural damage or widespread impact.\nDamage Estimate: 0.0%\nConfidence: 0.05\nReasoning: Text analysis shows no relevant reports from residents for ZIP 77080 during the specified time, leading to a very low confidence in any impact. In contrast, visual analysis confirms significant flooding due to the overflowing Buffalo Bayou but shows no structural damage to buildings or infrastructure. Despite the flooding visible in imagery, the lack of localized reports in the text analysis suggests that impacts are not widespread, but localized areas may be affected near the bayou.",
+        "damage_pct": 0.0,
+        "confidence": 0.05
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.04,
+        "claim_count": 36,
+        "total_claim_amount": 803894.97
+      }
+    },
+    {
+      "query_id": 25,
+      "query": {
+        "zip": "77630",
+        "start_date": "2017-08-31",
+        "end_date": "2017-09-06",
+        "comment": ""
+      },
+      "retrieval_metadata": {
+        "tweet_count": 20,
+        "call_311_count": 20,
+        "imagery_tile_count": 10,
+        "has_sensor_data": true,
+        "has_kb_summary": false
+      },
+      "model_response": {
+        "raw": {
+          "reasoning": "The Text Analyst found no reports of flooding or damage in ZIP code 77630 during the specified period, which indicates a lack of direct evidence from on-the-ground sources. Conversely, the Visual Analyst identified localized severe flooding in one image tile resulting from a natural waterway overflowing its banks, affecting a golf course and nearby residential areas. However, there was no evidence of structural damage or widespread infrastructure issues, which is supported by high-confidence satellite imagery. This discrepancy suggests that while localized flooding exists, it does not appear to have caused significant impacts broadly across the region.",
+          "zip": "77630",
+          "time_window": {
+            "start": "2017-08-31",
+            "end": "2017-09-06"
+          },
+          "estimates": {
+            "structural_damage_pct": 0.0,
+            "roads_impacted": [
+              "Submerged roads near the golf course"
+            ],
+            "confidence": 0.9
+          },
+          "evidence_refs": {
+            "imagery_tile_ids": [
+              "20170831bC0953600w294630n"
+            ],
+            "tweet_ids": [],
+            "call_311_ids": [],
+            "sensor_ids": [],
+            "kb_refs": []
+          },
+          "natural_language_summary": "Residents did not report any flooding or damage, but satellite imagery reveals localized severe flooding affecting a golf course and encroaching into residential areas. No structural damage was observed, and flooding is limited to specific areas rather than being widespread."
+        },
+        "formatted": "Summary: Residents did not report any flooding or damage, but satellite imagery reveals localized severe flooding affecting a golf course and encroaching into residential areas. No structural damage was observed, and flooding is limited to specific areas rather than being widespread.\nDamage Estimate: 0.0%\nConfidence: 0.9\nReasoning: The Text Analyst found no reports of flooding or damage in ZIP code 77630 during the specified period, which indicates a lack of direct evidence from on-the-ground sources. Conversely, the Visual Analyst identified localized severe flooding in one image tile resulting from a natural waterway overflowing its banks, affecting a golf course and nearby residential areas. However, there was no evidence of structural damage or widespread infrastructure issues, which is supported by high-confidence satellite imagery. This discrepancy suggests that while localized flooding exists, it does not appear to have caused significant impacts broadly across the region.",
+        "damage_pct": 0.0,
+        "confidence": 0.9
+      },
+      "ground_truth": {
+        "actual_damage_pct": 0.58,
+        "claim_count": 168,
+        "total_claim_amount": 12384928.54
+      }
+    }
+  ]
+}
