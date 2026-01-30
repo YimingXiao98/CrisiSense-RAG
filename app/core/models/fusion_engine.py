@@ -125,26 +125,33 @@ class FusionEngine:
         time_window: Dict[str, str],
     ) -> Dict[str, Any]:
         """Fuse results using simple heuristics."""
-        # Extract estimates
-        text_estimates = text_analysis.get("estimates", {})
-        visual_overall = visual_analysis.get("overall_assessment", {})
+        # Extract estimates - CRITICAL FIX: Handle None and empty dicts
+        text_estimates = text_analysis.get("estimates", {}) or {}
+        visual_overall = visual_analysis.get("overall_assessment", {}) or {}
 
         # Get damage estimates (try both old and new schema names)
-        text_damage = text_estimates.get(
-            "damage_severity_pct", text_estimates.get("structural_damage_pct", 0.0)
+        # Explicitly handle None values
+        text_damage_raw = text_estimates.get(
+            "damage_severity_pct", text_estimates.get("structural_damage_pct", None)
         )
-        text_flood = text_estimates.get("flood_extent_pct", 0.0)
+        text_damage = float(text_damage_raw) if text_damage_raw is not None else 0.0
+        
+        text_flood_raw = text_estimates.get("flood_extent_pct", None)
+        text_flood = float(text_flood_raw) if text_flood_raw is not None else 0.0
 
-        visual_damage = visual_overall.get(
-            "damage_severity_pct", visual_overall.get("structural_damage_pct", 0.0)
+        visual_damage_raw = visual_overall.get(
+            "damage_severity_pct", visual_overall.get("structural_damage_pct", None)
         )
+        visual_damage = float(visual_damage_raw) if visual_damage_raw is not None else 0.0
+        
         # Support new schema: flood_evidence_pct (post-flood indicators)
-        visual_flood = visual_overall.get(
+        visual_flood_raw = visual_overall.get(
             "flood_evidence_pct",
             visual_overall.get(
-                "flood_extent_pct", visual_overall.get("flood_severity_pct", 0.0)
+                "flood_extent_pct", visual_overall.get("flood_severity_pct", None)
             ),
         )
+        visual_flood = float(visual_flood_raw) if visual_flood_raw is not None else 0.0
 
         # NEW: Get text confirmation level from visual analysis
         text_confirmation = visual_overall.get("text_confirmation_level", "unknown")
@@ -156,50 +163,136 @@ class FusionEngine:
         # Visual analysis now explicitly reports whether it confirms text.
         # Use this to make smarter fusion decisions.
 
+        # REFINED FUSION LOGIC: More conservative for flood extent, better for damage
+        
+        # CRITICAL FIX: Handle zero-zero case explicitly
+        if text_flood == 0.0 and visual_flood == 0.0:
+            fused_flood = 0.0
+            fusion_note = "both_zero"
         # Flood extent:
-        # - Text is always the baseline (real-time reports)
-        # - Visual can BOOST if it confirms (shows flood evidence/debris)
-        # - Visual cannot reduce (water receded, but damage happened)
-
-        if text_confirmation == "strong":
-            # Visual strongly confirms text - boost confidence, slight increase
-            fused_flood = text_flood * 1.1  # 10% boost
-            fused_flood = min(fused_flood, 100)  # Cap at 100
-            fusion_note = "visual_confirms_strong"
+        # - Text is PRIMARY and TRUSTED (real-time reports during event)
+        # - Visual is ONLY confirmatory, never reduces text estimates
+        # - Be very conservative: water receded by Aug 31, so visual "no flooding" doesn't mean it didn't flood
+        # - For flood extent: Consider NOT using visual at all (damage-only visual fusion)
+        elif text_confirmation == "unknown":
+            # Unknown confirmation - use smart fallback
+            # If text=0 but visual shows evidence, trust visual (text may have failed)
+            # If text>0, trust text (most conservative for flood extent)
+            if text_flood == 0 and visual_flood > 0:
+                # Text says 0 but visual shows evidence - use visual with high confidence threshold
+                if visual_confidence > 0.6:
+                    fused_flood = visual_flood * 0.8  # Use visual but reduce by 20% (conservative)
+                    fusion_note = "unknown_confirmation_visual_fallback"
+                else:
+                    fused_flood = visual_flood * 0.6  # Low confidence visual - reduce more
+                    fusion_note = "unknown_confirmation_visual_low_conf"
+            elif text_flood > 0:
+                # Text has signal - trust it (most conservative)
+                fused_flood = text_flood
+                fusion_note = "unknown_confirmation_use_text"
+            else:
+                # Both are 0 - already handled above
+                fused_flood = 0.0
+                fusion_note = "unknown_confirmation_both_zero"
+        elif text_confirmation == "strong":
+            # Visual strongly confirms text - use weighted average with small boost
+            # Give text much more weight (75/25) since it's real-time
+            text_weight = 0.75 + (text_confidence - 0.5) * 0.1  # 0.7-0.8 range
+            visual_weight = 0.25 + (visual_confidence - 0.5) * 0.1  # 0.2-0.3 range
+            total_weight = text_weight + visual_weight
+            fused_flood = (text_flood * text_weight + visual_flood * visual_weight) / total_weight
+            # Apply smaller 8% boost for strong confirmation (reduced from 15%)
+            fused_flood = min(fused_flood * 1.08, 100)
+            fusion_note = "visual_confirms_strong_conservative"
         elif text_confirmation == "partial":
-            # Partial confirmation - use text as-is with confidence boost
-            fused_flood = text_flood
-            fusion_note = "visual_confirms_partial"
+            # Partial confirmation - use text with minimal visual influence
+            text_weight = 0.80 + (text_confidence - 0.5) * 0.1  # 0.75-0.85 range
+            visual_weight = 0.20 + (visual_confidence - 0.5) * 0.1  # 0.15-0.25 range
+            total_weight = text_weight + visual_weight
+            fused_flood = (text_flood * text_weight + visual_flood * visual_weight) / total_weight
+            fusion_note = "visual_confirms_partial_conservative"
         elif text_confirmation == "contradicts":
-            # Visual contradicts - but we trust text (temporal mismatch)
+            # Visual contradicts - ALWAYS trust text only (water receded)
+            # Never incorporate visual when it contradicts for flood extent
             fused_flood = text_flood
-            fusion_note = "visual_contradicts_trust_text"
+            fusion_note = "visual_contradicts_trust_text_only"
+        elif text_confirmation == "none":
+            # Visual shows no confirmation - trust text only
+            fused_flood = text_flood
+            fusion_note = "no_confirmation_use_text"
         elif text_flood > 20 and visual_flood > 20:
-            # Fallback: both show evidence - average
-            fused_flood = text_flood * 0.6 + visual_flood * 0.4
-            fusion_note = "both_show_evidence"
+            # Both show evidence - conservative weighted average (favor text)
+            text_weight = 0.70 + (text_confidence - 0.5) * 0.15  # 0.65-0.8 range
+            visual_weight = 0.30 + (visual_confidence - 0.5) * 0.15  # 0.2-0.35 range
+            total_weight = text_weight + visual_weight
+            fused_flood = (text_flood * text_weight + visual_flood * visual_weight) / total_weight
+            fusion_note = "both_show_evidence_conservative"
         elif text_flood > 0:
-            # Only text shows flooding
+            # Only text shows flooding - trust it completely
             fused_flood = text_flood
             fusion_note = "text_only"
         else:
-            # No text signal - use visual as fallback
-            fused_flood = visual_flood
-            fusion_note = "visual_fallback"
+            # No text signal - use visual as fallback, but be very conservative
+            # Since visual is post-event, low values might mean water receded
+            # Only trust visual if confidence is high
+            if visual_confidence > 0.7:
+                fused_flood = visual_flood
+                fusion_note = "visual_fallback_high_conf"
+            else:
+                # Low confidence visual with no text - default to 0
+                fused_flood = 0.0
+                fusion_note = "no_evidence_default_zero"
 
-        # Damage:
-        # - Text is baseline (internal damage not visible)
-        # - Visual can BOOST if it confirms (shows debris/damage)
-        # - Visual cannot REDUCE (may miss internal damage)
-        if text_damage > 20 and visual_damage > 20:
-            # CONFIRMATION: Both show damage - use the higher one
-            fused_damage = max(text_damage, visual_damage)
-        elif visual_damage > text_damage + 20:
-            # Visual shows significant damage text missed - boost slightly
-            fused_damage = text_damage + (visual_damage - text_damage) * 0.3
+        # Damage: IMPROVED FUSION
+        # - Use confidence-weighted fusion for better integration
+        # - Visual can contribute more since damage is persistent
+        # - Only incorporate visual if confidence is sufficient
+        
+        # CRITICAL FIX: Handle zero-zero case explicitly
+        if text_damage == 0.0 and visual_damage == 0.0:
+            fused_damage = 0.0
         else:
-            # Default to text (visual can't veto)
-            fused_damage = text_damage
+            # Compute agreement level
+            damage_diff = abs(text_damage - visual_damage)
+            agreement_threshold = 20  # percentage points
+            
+            # Only use visual if confidence is reasonable
+            use_visual_for_damage = visual_confidence > 0.5
+            
+            if not use_visual_for_damage:
+                # Low visual confidence - trust text only
+                fused_damage = text_damage
+            elif damage_diff <= agreement_threshold:
+                # Good agreement - use confidence-weighted average
+                text_weight = 0.5 + (text_confidence - 0.5) * 0.3  # 0.35-0.65 range
+                visual_weight = 0.5 + (visual_confidence - 0.5) * 0.3  # 0.35-0.65 range
+                total_weight = text_weight + visual_weight
+                fused_damage = (text_damage * text_weight + visual_damage * visual_weight) / total_weight
+                # Slight boost for agreement
+                fused_damage = min(fused_damage * 1.05, 100)
+            elif text_damage > 20 and visual_damage > 20:
+                # Both show damage but disagree - use weighted average favoring higher confidence
+                if text_confidence > visual_confidence:
+                    text_weight = 0.6
+                    visual_weight = 0.4
+                else:
+                    text_weight = 0.4
+                    visual_weight = 0.6
+                fused_damage = text_damage * text_weight + visual_damage * visual_weight
+            elif visual_damage > text_damage + 15:
+                # Visual shows significant damage text missed - incorporate more aggressively
+                # Use 50% of the difference (increased from 30%)
+                fused_damage = text_damage + (visual_damage - text_damage) * 0.5
+                fused_damage = min(fused_damage, 100)
+            elif text_damage > visual_damage + 15:
+                # Text shows more damage - trust text but incorporate visual
+                fused_damage = text_damage * 0.85 + visual_damage * 0.15
+            else:
+                # Default: confidence-weighted average
+                text_weight = 0.6 + (text_confidence - 0.5) * 0.2
+                visual_weight = 0.4 + (visual_confidence - 0.5) * 0.2
+                total_weight = text_weight + visual_weight
+                fused_damage = (text_damage * text_weight + visual_damage * visual_weight) / total_weight
 
         # Detect conflicts (for logging only, not used in decision)
         AGREEMENT_THRESHOLD = 30  # percentage points

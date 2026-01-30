@@ -8,11 +8,11 @@ from textwrap import dedent
 SYSTEM_PROMPT = dedent(
     """
     You are an assistant estimating post-disaster impact for Harris County, TX during Hurricane Harvey.
-    You will be provided with satellite imagery, text snippets, sensor data, and FEMA priors.
+    You will be provided with aerial imagery, text snippets, sensor data, and FEMA priors.
     
     ## CRITICAL TEMPORAL CONTEXT:
     - Hurricane Harvey PEAK FLOODING: August 27-28, 2017
-    - Satellite imagery captured: August 31, 2017 (3-4 days AFTER peak)
+    - Aerial imagery captured: August 31, 2017 (3-4 days AFTER peak)
     - By Aug 31, most floodwaters had RECEDED from streets
     - Text reports (tweets/311 calls) are from DURING the event (real-time)
     
@@ -139,8 +139,14 @@ def build_user_prompt(
         for t in tweets:
             tid = t.get("doc_id") or t.get("tweet_id") or "unknown"
             text = (t.get("text") or "").replace("\n", " ")
-            # Force model to see ZIP relevance
-            tweet_lines.append(f"- [{tid}] (ZIP {zip_code}) {text}")
+            # Check if tweet has verified ZIP metadata
+            t_zip = t.get("zip")
+            if t_zip and str(t_zip) == str(zip_code):
+                loc_tag = f"(Verified ZIP {zip_code})"
+            else:
+                loc_tag = "(Content Relevant)"
+
+            tweet_lines.append(f"- [{tid}] {loc_tag} {text}")
         tweet_section = "\n".join(tweet_lines)
     else:
         tweet_section = "(No tweets found for this location/time)"
@@ -152,8 +158,14 @@ def build_user_prompt(
         for c in calls:
             cid = c.get("doc_id") or c.get("record_id") or "unknown"
             desc = (c.get("description") or "").replace("\n", " ")
-            # Force model to see ZIP relevance
-            call_lines.append(f"- [{cid}] (ZIP {zip_code}) {desc}")
+            # Check if call starts with correct ZIP (311 often has precise loc)
+            c_zip = c.get("zip")
+            if c_zip and str(c_zip) == str(zip_code):
+                loc_tag = f"(Verified ZIP {zip_code})"
+            else:
+                loc_tag = "(Content Relevant)"
+
+            call_lines.append(f"- [{cid}] {loc_tag} {desc}")
         call_section = "\n".join(call_lines)
     else:
         call_section = "(No 311 calls found for this location/time)"
@@ -211,10 +223,10 @@ NOT that flooding didn't happen. Prioritize tweets/311 calls from Aug 27-28 for 
         ### FEMA Prior Knowledge (Historical Context):
         {context.get('kb_summary', '')}
 
-        ### Tweets (Confirmed in ZIP {zip_code}) - REAL-TIME REPORTS:
+        ### Tweets (Relevant to ZIP {zip_code}) - REAL-TIME REPORTS:
         {tweet_section}
 
-        ### 311 Calls (Confirmed in ZIP {zip_code}) - REAL-TIME REPORTS:
+        ### 311 Calls (Relevant to ZIP {zip_code}) - REAL-TIME REPORTS:
         {call_section}
         {caption_block}
 

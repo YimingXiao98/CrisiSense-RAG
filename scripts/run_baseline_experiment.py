@@ -128,6 +128,7 @@ def run_baseline_experiment(
     judge_name: str = "gpt-4o-mini",
     shuffle: bool = False,
     seed: int = 42,
+    text_model: str = None,
 ) -> None:
     """Run baseline retrieval experiment and save results."""
 
@@ -159,8 +160,20 @@ def run_baseline_experiment(
     # Initialize components
     locator = DataLocator(Path(config.get("data_dir", "data")))
     retriever = Retriever(locator)
+    
+    # Determine provider based on text_model or config
+    if text_model:
+        # If a specific text model is specified, determine the provider
+        from app.core.models.text_client import HF_MODEL_CONFIGS
+        if text_model in HF_MODEL_CONFIGS or ":" in text_model:
+            provider = "huggingface"
+        elif text_model.startswith("gpt"):
+            provider = "openai"
+        else:
+            provider = "gemini"
+        logger.info(f"Using text model: {text_model} (provider: {provider})")
+    else:
     # Ensure consistent model usage: default to gemini if not specified
-    # This ensures all experiments use the same model regardless of config
     provider = config.get("provider", "gemini")
     if provider != "gemini" and provider != "openai":
         logger.warning(f"Unknown provider '{provider}', defaulting to 'gemini'")
@@ -170,6 +183,7 @@ def run_baseline_experiment(
         provider=provider,
         enable_visual=config.get("enable_visual", True),
         use_llm_fusion=False,  # Use heuristic fusion with confirmation logic
+        text_model=text_model,
     )
     logger.info(f"Using provider: {provider} for {experiment_name}")
     # Use flood depth as ground truth (more accurate than claims)
@@ -221,6 +235,7 @@ def run_baseline_experiment(
             "dense_top_k": settings.dense_top_k,
             # Model configuration for reproducibility
             "model_provider": provider,
+            "text_model": text_model or (os.getenv("GEMINI_MODEL", "gemini-1.5-flash") if provider == "gemini" else os.getenv("OPENAI_MODEL", "gpt-4o-mini") if provider == "openai" else None),
             "gemini_model": os.getenv("GEMINI_MODEL", "gemini-1.5-flash") if provider == "gemini" else None,
             "openai_model": os.getenv("OPENAI_MODEL", "gpt-4o-mini") if provider == "openai" else None,
             "visual_model_provider": client.visual_provider if hasattr(client, 'visual_provider') else provider,
@@ -479,6 +494,12 @@ if __name__ == "__main__":
         default=42,
         help="Random seed for shuffling",
     )
+    parser.add_argument(
+        "--text-model",
+        type=str,
+        default=None,
+        help="Text model to use (e.g., 'llama-3.3-70b', 'qwen2.5-72b'). Overrides provider.",
+    )
 
     args = parser.parse_args()
 
@@ -492,4 +513,5 @@ if __name__ == "__main__":
         no_visual=args.no_visual,
         shuffle=args.shuffle,
         seed=args.seed,
+        text_model=args.text_model,
     )

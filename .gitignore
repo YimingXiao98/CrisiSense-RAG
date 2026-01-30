@@ -64,6 +64,9 @@ Thumbs.db
 .cursor/*
 !.cursor/commands/
 
+# Agent files
+.agent/
+
 # Personal notes and logs (not tracked)
 NOTES/
 
@@ -79,11 +82,12 @@ data/examples/
 data/annotations/
 
 # Experiment intermediates and archives
-data/experiments/*.intermediate.json
-data/experiments/archive/
+data/experiments/
 data/processed_old_backup/
 
-# Config archives
+# Config files (keep only the 207-query complete map)
+config/queries_*.json
+!config/queries_complete_map.json
 config/archive/
 
 # LaTeX build artifacts
@@ -94,6 +98,10 @@ paper/*.fdb_latexmk
 paper/*.fls
 paper/*.out
 paper/*.synctex.gz
+main.aux
+main.fdb_latexmk
+main.fls
+main.log
 
 # Documentation (only README tracked)
 *.md
@@ -110,3 +118,45 @@ paper/
 
 # Other
 *.pdf
+*.zip
+
+# Shell scripts and prompts
+activate_antigravity.sh
+run.sh
+*_PROMPT*.txt
+*_PROMPT*.md
+
+# Root-level one-off analysis scripts
+analyze_retrieval.py
+calculate_accuracy.py
+calculate_correlation.py
+calculate_stats.py
+cc.py
+compress_image.py
+create_complete_map_config.py
+debug_counts.py
+debug_dist.py
+debug_min.py
+debug_stats.py
+demo_query.py
+evaluate_retrieval.py
+fact_check_table.py
+filter_core_area.py
+final_verify.py
+generate_comparison_maps.py
+generate_maps.py
+generate_maps_core.py
+plot_results_barchart.py
+project_handoff_summary.md
+
+# One-off scripts in scripts/
+scripts/compare_*.py
+scripts/count_*.py
+scripts/analyze_*.py
+scripts/debug_*.py
+scripts/interim_*.py
+scripts/visualize_*.py
+scripts/cleanup_codebase.sh
+scripts/run_ablation_study.sh
+scripts/run_dev_baselines.sh
+scripts/run_text_caption_improvements.sh

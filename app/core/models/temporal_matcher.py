@@ -152,31 +152,36 @@ def apply_temporal_weighting_to_visual(
     if not imagery_tiles:
         return visual_analysis
 
-    # Compute average temporal weight across all tiles
-    weights = []
+    # Compute separate temporal weights for flood and damage
+    flood_weights = []
+    damage_weights = []
+    
     for tile in imagery_tiles:
         tile_timestamp = _parse_timestamp(tile.get("timestamp"))
         if tile_timestamp:
-            weight = compute_temporal_weight(
+            base_weight = compute_temporal_weight(
                 tile_timestamp, event_start, event_end, weighting_method
             )
-            # Adjust decay rate based on metric type
-            if metric_type == "flood_extent":
-                # Flood extent: imagery captured days after event is less reliable
-                # 30% decay per day after event
-                if tile_timestamp > event_end:
-                    days_after = (tile_timestamp - event_end).days
-                    weight *= max(0.1, 1.0 - days_after * 0.30)  # 30% per day
-            elif metric_type == "damage":
-                # Damage: persists longer, slower decay
-                # 5% decay per day after event
-                if tile_timestamp > event_end:
-                    days_after = (tile_timestamp - event_end).days
-                    weight *= max(0.3, 1.0 - days_after * 0.05)  # 5% per day
+            
+            # Flood extent: less aggressive decay (was 20%, now 10% per day)
+            # Since we're being more conservative in fusion, we can be less aggressive here
+            if tile_timestamp > event_end:
+                days_after = (tile_timestamp - event_end).days
+                flood_weight = base_weight * max(0.4, 1.0 - days_after * 0.10)  # 10% per day, min 0.4
+            else:
+                flood_weight = base_weight
+            flood_weights.append(flood_weight)
+            
+            # Damage: much slower decay (damage persists)
+            if tile_timestamp > event_end:
+                days_after = (tile_timestamp - event_end).days
+                damage_weight = base_weight * max(0.6, 1.0 - days_after * 0.02)  # 2% per day, min 0.6
+            else:
+                damage_weight = base_weight
+            damage_weights.append(damage_weight)
 
-            weights.append(weight)
-
-    avg_weight = sum(weights) / len(weights) if weights else 0.5
+    avg_flood_weight = sum(flood_weights) / len(flood_weights) if flood_weights else 0.5
+    avg_damage_weight = sum(damage_weights) / len(damage_weights) if damage_weights else 0.7  # Default higher for damage
 
     # Apply temporal weighting to estimates
     overall = visual_analysis.get("overall_assessment", {})
@@ -184,29 +189,31 @@ def apply_temporal_weighting_to_visual(
     # Create weighted version
     weighted_overall = overall.copy()
     
-    # Scale estimates by temporal weight
+    # Scale flood estimates by flood-specific weight
     if "flood_evidence_pct" in overall:
-        weighted_overall["flood_evidence_pct"] = overall["flood_evidence_pct"] * avg_weight
+        weighted_overall["flood_evidence_pct"] = overall["flood_evidence_pct"] * avg_flood_weight
     if "flood_extent_pct" in overall:
-        weighted_overall["flood_extent_pct"] = overall["flood_extent_pct"] * avg_weight
+        weighted_overall["flood_extent_pct"] = overall["flood_extent_pct"] * avg_flood_weight
     if "flood_severity_pct" in overall:
-        weighted_overall["flood_severity_pct"] = overall["flood_severity_pct"] * avg_weight
+        weighted_overall["flood_severity_pct"] = overall["flood_severity_pct"] * avg_flood_weight
     
-    # Damage decays slower
-    damage_weight = min(1.0, avg_weight * 1.2)  # Boost damage weight slightly
+    # Scale damage estimates by damage-specific weight (much less aggressive)
     if "structural_damage_pct" in overall:
-        weighted_overall["structural_damage_pct"] = overall["structural_damage_pct"] * damage_weight
+        weighted_overall["structural_damage_pct"] = overall["structural_damage_pct"] * avg_damage_weight
     if "damage_severity_pct" in overall:
-        weighted_overall["damage_severity_pct"] = overall["damage_severity_pct"] * damage_weight
+        weighted_overall["damage_severity_pct"] = overall["damage_severity_pct"] * avg_damage_weight
 
     # Store temporal metadata
-    weighted_overall["temporal_weight"] = avg_weight
+    weighted_overall["temporal_weight"] = avg_flood_weight  # For backward compatibility
+    weighted_overall["temporal_weight_flood"] = avg_flood_weight
+    weighted_overall["temporal_weight_damage"] = avg_damage_weight
     weighted_overall["temporal_weighting_method"] = weighting_method
 
     result = visual_analysis.copy()
     result["overall_assessment"] = weighted_overall
     result["temporal_metadata"] = {
-        "avg_temporal_weight": avg_weight,
+        "avg_temporal_weight_flood": avg_flood_weight,
+        "avg_temporal_weight_damage": avg_damage_weight,
         "num_tiles": len(imagery_tiles),
         "weighting_method": weighting_method,
     }

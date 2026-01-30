@@ -1,0 +1,1252 @@
+{
+  "name": "complete_map_coverage",
+  "description": "Queries for all 207 ZIPs in the study area for spatial mapping.",
+  "created": "2026-01-15",
+  "queries": [
+    {
+      "zip": "77578",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77461",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77481",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77459",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77417",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77099",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77591",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77389",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77586",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77020",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77013",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77003",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77009",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77086",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77346",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77060",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77018",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77040",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77094",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77048",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77047",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77365",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77046",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77488",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77583",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77521",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77580",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77476",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77450",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77478",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77539",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77388",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77065",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77571",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77017",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77507",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77028",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77008",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77530",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77080",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77041",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77396",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77059",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77050",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77072",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77385",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77354",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77382",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77474",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77584",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77511",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77523",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77494",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77407",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77464",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77517",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77590",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77067",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77066",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77090",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77034",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77502",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77504",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77029",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77023",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77024",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77033",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77073",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77075",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77587",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77598",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77089",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77063",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77345",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77328",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77355",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77362",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77545",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77477",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77451",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77518",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77565",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77373",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77562",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77336",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77026",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77007",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77076",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77030",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77057",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77339",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77043",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77045",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77074",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77096",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77372",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77302",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77306",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77304",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77466",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77445",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77880",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77426",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77435",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77070",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77375",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77095",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77433",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77503",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77069",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77536",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77038",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77520",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77049",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77087",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77039",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77091",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77098",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77037",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77062",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77079",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77071",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77201",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77380",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77448",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77418",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77581",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77868",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77535",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77441",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77423",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77489",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77498",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77510",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77568",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77363",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77532",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77357",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77011",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77012",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77002",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77016",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77022",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77006",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77547",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77092",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77032",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77036",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77021",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77061",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77010",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77042",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77031",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77316",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77485",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77473",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77469",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77471",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77083",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77546",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77484",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77429",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77377",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77379",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77064",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77058",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77004",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77019",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77093",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77027",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77088",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77056",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77081",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77051",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77338",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77077",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77082",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77449",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77025",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77327",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77386",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77381",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77446",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77406",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77493",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77053",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77479",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77085",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77573",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77356",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77068",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77447",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77014",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77506",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77505",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77015",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77084",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77078",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77054",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77401",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77005",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77055",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77044",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77035",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77301",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77303",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    },
+    {
+      "zip": "77384",
+      "start": "2017-08-25",
+      "end": "2017-09-01",
+      "category": "map_fill"
+    }
+  ],
+  "provider": "gemini",
+  "ground_truth": "claims",
+  "retrieval_gt": null
+}

@@ -31,21 +31,24 @@ class SplitPipelineClient:
         enable_visual: bool = True,
         use_llm_fusion: bool = True,
         visual_provider: str = None,
+        text_model: str = None,
     ):
         """
         Initialize the split pipeline client.
 
         Args:
-            provider: LLM provider for text analysis ("openai" or "gemini")
+            provider: LLM provider for text analysis ("openai", "gemini", or "huggingface")
             enable_visual: Whether to enable visual analysis
             use_llm_fusion: Whether to use LLM for fusion (vs heuristics)
             visual_provider: Provider for visual analysis ("openai" or "gemini", defaults to provider)
+            text_model: Specific model name for text analysis (e.g., "llama-3.3-70b", "qwen2.5-72b")
         """
         if not provider:
             provider = os.getenv("MODEL_PROVIDER", "openai")
 
         self.provider = provider
-        self.text_client = TextAnalysisClient(provider=provider)
+        self.text_model = text_model
+        self.text_client = TextAnalysisClient(provider=provider, model_name=text_model)
         self.verifier = Verifier()
 
         # Visual pipeline components (lazy-loaded)

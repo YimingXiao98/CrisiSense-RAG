@@ -67,10 +67,11 @@ def build_visual_analysis_prompt(
 {text_summary}
 
 Your task: Look for VISUAL CONFIRMATION of the above text reports.
-- If text says "flooding reported" → look for water lines, debris, mud
-- If text says "house damaged" → look for roof damage, structural issues
-- If you see evidence CONFIRMING text → note "CONFIRMED by imagery"
-- If you see NO evidence → note "NOT VISIBLE in imagery" (doesn't mean it didn't happen)
+- If text says "flooding reported" → look for water lines, debris, mud, sediment deposits
+- If text says "house damaged" → look CAREFULLY for roof damage, structural issues, debris piles
+- If you see evidence CONFIRMING text → note "CONFIRMED by imagery" and set high confidence
+- If you see NO evidence → note "NOT VISIBLE in imagery" (doesn't mean it didn't happen) but still report what you DO see
+- Be thorough in damage detection: look for missing shingles, tarps, collapsed structures, debris
 """
     else:
         text_guidance = ""
@@ -82,10 +83,11 @@ Location: ZIP {zip_code}
 Time Period: {time_window['start']} to {time_window['end']}
 Image Tiles: {tile_ids}
 {text_guidance}
-For each image, look for POST-FLOOD evidence:
-- Debris, sediment, water stains (evidence of past flooding)
-- Structural damage (roofs, walls, collapsed buildings)
-- Road/infrastructure damage
+For each image, look CAREFULLY for POST-FLOOD evidence:
+- Debris, sediment, water stains, mud deposits (evidence of past flooding)
+- Structural damage (roofs with missing shingles/tarps, walls, collapsed buildings, debris piles)
+- Road/infrastructure damage (potholes, debris on roads, damaged bridges)
+- Pay special attention to damage severity - be precise in your percentage estimates
 
 Respond with JSON matching this schema:
 {{
