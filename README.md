@@ -1,4 +1,4 @@
-# DisasterImpactRAG
+# CrisiSense-RAG
 
 A multimodal retrieval-augmented generation (RAG) framework for post-disaster impact assessment. This system integrates aerial imagery, social media reports, emergency calls, and sensor data to estimate flood extent and structural damage at the ZIP-code level.
 
@@ -160,7 +160,7 @@ python scripts/run_baseline_experiment.py \
 If you use this code, please cite:
 
 ```bibtex
-@article{disasterimpactrag2025,
+@article{crisisenserag2025,
   title={Multimodal Retrieval-Augmented Generation for Disaster Impact Assessment},
   author={...},
   year={2025}
