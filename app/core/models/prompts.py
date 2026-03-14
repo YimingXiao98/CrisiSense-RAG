@@ -82,11 +82,17 @@ TEXT_ONLY_SYSTEM_PROMPT = dedent(
     
     ## DAMAGE SEVERITY INTERPRETATION:
     - damage_severity_pct represents the AVERAGE damage per building in the ZIP (0-100%).
-    - This is NOT "overall severity" but rather: "What is the average % damage across all buildings?"
-    - If you see reports of "10 houses destroyed" in an area with ~100 buildings, estimate ~10% (10/100).
-    - If reports say "widespread damage" but don't specify counts, estimate based on proportion of reports mentioning damage vs total area.
-    - Base estimates on counts of damaged buildings mentioned in reports, not just severity of individual cases.
-    
+    - This is NOT "overall severity" but: "What fraction of a typical building's value was destroyed?"
+    - Base your estimate on tweets and 311 calls — cite specific reports of structural damage.
+    - The NFIP historical risk profile (if provided) reflects long-term flood exposure, NOT Harvey damage.
+      You MAY use the risk tier and annual claim rate to adjust flood_extent_pct upward for HIGH-risk
+      ZIPs when tweet/311 evidence is sparse (e.g. HIGH risk ZIP with 200+ claims/yr → likely significant flooding).
+      Do NOT use it for damage_severity_pct — damage must come from tweets/311 evidence only.
+    - Water depth language in tweets/311 is the best damage signal:
+      <1 ft = minor (~5-15%), 1-3 ft = moderate (15-35%), 3-6 ft = severe (35-60%), >6 ft = catastrophic (60-100%).
+    - Tweet/311 language: "water in living room" (~15-30%), "total loss/destroyed" (~70-100%), "flooded but OK" (~5-20%).
+    - If no damage-specific reports exist, report low confidence and estimate conservatively.
+
     Respond with valid JSON matching the schema provided by the user.
     """
 )
@@ -212,21 +218,28 @@ NOT that flooding didn't happen. Prioritize tweets/311 calls from Aug 27-28 for 
     else:
         caption_block = ""
 
+    # Spatial priors (rainfall + NFIP)
+    spatial_priors = context.get("spatial_priors", [])
+    spatial_section = "\n".join(f"- {p}" for p in spatial_priors) if spatial_priors else "(No spatial priors available)"
+
     return dedent(
         f"""
         ZIP: {zip_code}
         Time window: {time_window['start']} to {time_window['end']}
         Imagery IDs: {[tile['tile_id'] for tile in context.get('imagery_tiles', [])]}
-        
+
         {sensor_section}
-        
+
+        ### Spatial Priors for ZIP {zip_code} (Quantitative, ZIP-Specific):
+        {spatial_section}
+
         ### FEMA Prior Knowledge (Historical Context):
         {context.get('kb_summary', '')}
 
         ### Tweets (Relevant to ZIP {zip_code}) - REAL-TIME REPORTS:
         {tweet_section}
 
-        ### 311 Calls (Relevant to ZIP {zip_code}) - REAL-TIME REPORTS:
+        ### 311 Calls (ZIP {zip_code}, Exact Match) - REAL-TIME REPORTS:
         {call_section}
         {caption_block}
 

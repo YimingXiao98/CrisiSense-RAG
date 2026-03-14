@@ -64,6 +64,8 @@ class TextAnalysisClient:
             self._init_openai(model_name, api_key or os.getenv("OPENAI_API_KEY"))
         elif self.provider == "huggingface":
             self._init_huggingface(model_name, api_key or os.getenv("HF_TOKEN"))
+        elif self.provider == "openrouter":
+            self._init_openrouter(model_name, api_key or os.getenv("OPENROUTER_API"))
         else:
             raise ValueError(f"Unsupported provider: {self.provider}")
 
@@ -133,6 +135,27 @@ class TextAnalysisClient:
         self.model_name = model_name
         logger.info(f"Initialized HuggingFace client with model: {full_model_name}")
 
+    def _init_openrouter(self, model_name: str, api_key: str):
+        """Initialize OpenRouter client (OpenAI-compatible)."""
+        import os
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise ImportError("openai package not installed. Run: pip install openai")
+
+        if not api_key:
+            logger.warning("OPENROUTER_API not set. TextAnalysisClient will fail.")
+
+        if not model_name:
+            model_name = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash")
+
+        self.openrouter_client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        )
+        self.openrouter_model = model_name
+        logger.info(f"Initialized OpenRouter client with model: {model_name}")
+
     def analyze(
         self,
         zip_code: str,
@@ -164,6 +187,8 @@ class TextAnalysisClient:
                 return self._analyze_openai(prompt)
             elif self.provider == "huggingface":
                 return self._analyze_huggingface(prompt)
+            elif self.provider == "openrouter":
+                return self._analyze_openrouter(prompt)
         except Exception as e:
             logger.error(f"Text analysis failed: {e}")
             return {
@@ -244,6 +269,33 @@ class TextAnalysisClient:
                 logger.warning(f"JSON parsing failed, attempting manual extraction from: {raw_text[:500]}...")
                 return self._extract_fields_manually(raw_text)
     
+    def _analyze_openrouter(self, prompt: str) -> Dict[str, Any]:
+        """Analyze using OpenRouter (OpenAI-compatible endpoint)."""
+        import re
+        response = self.openrouter_client.chat.completions.create(
+            model=self.openrouter_model,
+            messages=[
+                {"role": "system", "content": TEXT_ONLY_SYSTEM_PROMPT.strip()},
+                {"role": "user", "content": prompt},
+            ],
+            response_format={"type": "json_object"},
+            max_tokens=4096,
+        )
+        raw_text = response.choices[0].message.content
+        # Handle markdown-wrapped JSON that some models return
+        json_match = re.search(r'```(?:json)?\s*([\s\S]*?)\s*```', raw_text)
+        if json_match:
+            raw_text = json_match.group(1)
+        json_start = raw_text.find('{')
+        json_end = raw_text.rfind('}') + 1
+        if json_start != -1 and json_end > json_start:
+            raw_text = raw_text[json_start:json_end]
+        raw_text = re.sub(r",\s*([}\]])", r"\1", raw_text)
+        try:
+            return json.loads(raw_text)
+        except json.JSONDecodeError:
+            return self._extract_fields_manually(raw_text)
+
     def _extract_fields_manually(self, raw_text: str) -> Dict[str, Any]:
         """Extract key fields from malformed JSON response."""
         import re

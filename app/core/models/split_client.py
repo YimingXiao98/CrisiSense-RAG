@@ -31,6 +31,7 @@ class SplitPipelineClient:
         enable_visual: bool = True,
         use_llm_fusion: bool = True,
         visual_provider: str = None,
+        visual_model: str = None,
         text_model: str = None,
     ):
         """
@@ -57,6 +58,7 @@ class SplitPipelineClient:
         self.visual_provider = visual_provider or os.getenv(
             "VISUAL_MODEL_PROVIDER", provider
         )
+        self.visual_model = visual_model  # explicit visual model name (overrides env default)
         self._visual_client: Optional[Any] = None
         self._fusion_engine: Optional[Any] = None
 
@@ -69,10 +71,14 @@ class SplitPipelineClient:
             from .visual_client import VisualAnalysisClient
             from .fusion_engine import FusionEngine
 
-            self._visual_client = VisualAnalysisClient(provider=self.visual_provider)
+            self._visual_client = VisualAnalysisClient(
+                provider=self.visual_provider,
+                model_name=self.visual_model,
+            )
             self._fusion_engine = FusionEngine(use_llm_fusion=self.use_llm_fusion)
             logger.info(
-                f"Visual pipeline components initialized (provider: {self.visual_provider})"
+                f"Visual pipeline components initialized "
+                f"(provider: {self.visual_provider}, model: {self.visual_model or 'default'})"
             )
         except Exception as e:
             logger.warning(f"Failed to initialize visual components: {e}")
@@ -211,9 +217,11 @@ class SplitPipelineClient:
 
         # Get estimates
         estimates = text_result.get("estimates", {})
-        flood_pct = estimates.get("flood_extent_pct", 0)
-        damage_pct = estimates.get(
-            "damage_severity_pct", estimates.get("structural_damage_pct", 0)
+        flood_pct = float(estimates.get("flood_extent_pct") or 0)
+        damage_pct = float(
+            estimates.get("damage_severity_pct")
+            or estimates.get("structural_damage_pct")
+            or 0
         )
 
         if flood_pct > 0:
@@ -245,15 +253,15 @@ class SplitPipelineClient:
         if "natural_language_summary" not in response:
             response["natural_language_summary"] = response.get("reasoning", "")
 
-        # Ensure estimates exist
-        if "estimates" not in response:
+        # Ensure estimates exist and is a dict (LLM may return null for this field)
+        if not isinstance(response.get("estimates"), dict):
             response["estimates"] = {
                 "structural_damage_pct": 0.0,
                 "confidence": 0.0,
             }
 
-        # Ensure evidence_refs exist
-        if "evidence_refs" not in response:
+        # Ensure evidence_refs exist and is a dict
+        if not isinstance(response.get("evidence_refs"), dict):
             response["evidence_refs"] = {
                 "tweet_ids": [],
                 "call_311_ids": [],

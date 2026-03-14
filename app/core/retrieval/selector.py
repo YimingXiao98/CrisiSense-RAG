@@ -6,7 +6,7 @@ from typing import Dict, List
 from .types import RetrievalResult
 
 
-def select_candidates(results: RetrievalResult, k_tiles: int, n_text: int, n_sensors: int = 3) -> Dict[str, object]:
+def select_candidates(results: RetrievalResult, k_tiles: int, n_text: int, n_sensors: int = 3, zip_code: str = "") -> Dict[str, object]:
     imagery = results.imagery[:k_tiles]
     tweets = sorted(results.tweets, key=lambda r: r.get("timestamp", ""))[:n_text]
     calls = sorted(results.calls, key=lambda r: r.get("timestamp", ""))[:n_text]
@@ -17,4 +17,5 @@ def select_candidates(results: RetrievalResult, k_tiles: int, n_text: int, n_sen
         "calls": calls,
         "sensors": sensors,
         "fema": results.fema,
+        "zip_code": zip_code,
     }

@@ -75,15 +75,7 @@ logs/
 *.log
 
 # Local data (large files, not tracked)
-data/raw/
-data/processed/
-data/indexes/
-data/examples/
-data/annotations/
-
-# Experiment intermediates and archives
-data/experiments/
-data/processed_old_backup/
+data/
 
 # Config files (keep only the 207-query complete map)
 config/queries_*.json

@@ -143,6 +143,8 @@ class VisualAnalysisClient:
 
         if self.provider == "gemini":
             self._init_gemini(model_name, api_key or os.getenv("GEMINI_API_KEY"))
+        elif self.provider == "openrouter":
+            self._init_openrouter_vision(model_name, api_key or os.getenv("OPENROUTER_API"))
         else:
             self._init_openai(model_name, api_key or os.getenv("OPENAI_API_KEY"))
 
@@ -161,6 +163,24 @@ class VisualAnalysisClient:
         logger.info(
             f"VisualAnalysisClient initialized with OpenAI model: {self.model_name}"
         )
+
+    def _init_openrouter_vision(self, model_name: str, api_key: str):
+        """Initialize OpenRouter client for vision tasks."""
+        import os
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise ImportError("openai package not installed. Run: pip install openai")
+
+        if not api_key:
+            logger.warning("OPENROUTER_API not set. VisualAnalysisClient will fail.")
+
+        self.model_name = model_name or os.getenv("OPENROUTER_VISION_MODEL", "openai/gpt-4o")
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        )
+        logger.info(f"VisualAnalysisClient initialized with OpenRouter model: {self.model_name}")
 
     def _init_gemini(self, model_name: str, api_key: str):
         """Initialize Gemini client."""
@@ -231,16 +251,31 @@ class VisualAnalysisClient:
                 logger.warning(f"Tile {tile_id} has no URI, skipping")
                 continue
 
-            # Resolve path
+            # Resolve path — prefer pre-converted JPEG if available
             uri_path = Path(uri)
             if uri_path.is_absolute():
-                image_path = uri_path
+                raw_path = uri_path
             else:
-                image_path = project_root / uri
+                raw_path = project_root / uri
+
+            # Check for pre-converted JPEG (data/processed/imagery_jpg/...)
+            jpg_path = None
+            try:
+                rel = raw_path.relative_to(project_root / "data" / "raw" / "imagery")
+                jpg_candidate = project_root / "data" / "processed" / "imagery_jpg" / rel.with_suffix(".jpg")
+                if jpg_candidate.exists():
+                    jpg_path = jpg_candidate
+            except ValueError:
+                pass
+
+            image_path = jpg_path if jpg_path else raw_path
 
             if not image_path.exists():
                 logger.warning(f"Image not found: {image_path}")
                 continue
+
+            if jpg_path:
+                logger.debug(f"Using pre-converted JPEG for {tile_id}")
 
             try:
                 if self.provider == "gemini":
@@ -290,7 +325,7 @@ class VisualAnalysisClient:
                     content,
                     generation_config={
                         "response_mime_type": "application/json",
-                        "max_output_tokens": 2000,
+                        "max_output_tokens": 8192,
                     },
                 )
                 result = json.loads(response.text)
