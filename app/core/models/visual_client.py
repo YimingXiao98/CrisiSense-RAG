@@ -326,6 +326,7 @@ class VisualAnalysisClient:
                     generation_config={
                         "response_mime_type": "application/json",
                         "max_output_tokens": 8192,
+                        "temperature": 0.0,
                     },
                 )
                 result = json.loads(response.text)
@@ -340,6 +341,7 @@ class VisualAnalysisClient:
                     ],
                     response_format={"type": "json_object"},
                     max_tokens=2000,
+                    temperature=0.0,
                 )
                 result = json.loads(response.choices[0].message.content)
 

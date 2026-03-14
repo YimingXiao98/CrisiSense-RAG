@@ -161,9 +161,9 @@ def run_baseline_experiment(
     # Determine provider based on text_model or config
     if text_model:
         # If a specific text model is specified, determine the provider
-        from app.core.models.text_client import HF_MODEL_CONFIGS
-        if text_model in HF_MODEL_CONFIGS or ":" in text_model:
-            provider = "huggingface"
+        from app.core.models.text_client import OPENROUTER_MODEL_CONFIGS
+        if text_model in OPENROUTER_MODEL_CONFIGS or "/" in text_model:
+            provider = "openrouter"
         elif text_model.startswith("gpt"):
             provider = "openai"
         else:
@@ -316,7 +316,7 @@ def run_baseline_experiment(
                     "total_claim_amount": round(truth.get("total_amount", 0.0), 2),
                     "pde_damage_score": (
                         pde_gt.score(query.zip).get("mean_pde", 0.0) if pde_gt else 0.0
-                    ),  # Raw mean_pde (0-1): average damage per building in the ZIP
+                    ),  # PDE mean damage (0-1): average damage per building in the ZIP
                 },
             }
 
@@ -391,10 +391,9 @@ def run_baseline_experiment(
         damage_preds = [
             r["model_response"]["damage_severity_pct"] for r in successful_records
         ]
-        # pde_damage_score is stored as normalized damage_pct (0-100%), already in percentage
+        # pde_damage_score is mean_pde * 100 (already in 0-100% range)
         damage_targets = [
             r["ground_truth"].get("pde_damage_score", 0.0)
-            * 100.0  # Convert from 0-1 to 0-100
             for r in successful_records
         ]
         damage_errors = [abs(p - a) for p, a in zip(damage_preds, damage_targets)]

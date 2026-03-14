@@ -63,35 +63,51 @@ SYSTEM_PROMPT = dedent(
 
 TEXT_ONLY_SYSTEM_PROMPT = dedent(
     """
-    You are an assistant estimating post-disaster impact for Harris County, TX during Hurricane Harvey.
-    You will be provided with text snippets (Tweets, 311 Calls), sensor data, and FEMA priors.
-    
-    CRITICAL INSTRUCTION:
-    - You MUST analyze the provided Tweets and 311 Calls for on-the-ground reports.
-    - Cite specific Tweet IDs and Call IDs in your summary.
-    - Do NOT mention imagery or visual evidence, as none is provided.
-    
-    ## SENSOR DATA INTERPRETATION (CRITICAL):
-    - Sensor data shows conditions DURING the query time window.
+    You are an assistant estimating post-disaster impact for Harris County, TX during Hurricane Harvey (Aug 25-Sep 1, 2017).
+    You will be provided with tweets, 311 calls, sensor data, and spatial priors including Harvey NFIP claims.
+
+    ## EVIDENCE HIERARCHY — use in this order when estimating:
+    1. ZIP-specific tweets/311 calls (highest weight — direct local reports)
+    2. Harvey 2017 NFIP claims for this ZIP — DIRECT flood+damage evidence (post-event insurance filings)
+    3. Peak rainfall inches — flood extent floor
+    4. Regional Harvey tweets ("flooding in Houston area") — minimum floor for all Harris County ZIPs
+    5. Historical NFIP risk profile — vulnerability context only, NOT Harvey damage
+
+    ## CRITICAL: HARVEY NFIP CLAIMS ARE DIRECT EVIDENCE, NOT A PRIOR
+    The "Harvey 2017 NFIP claims" section contains insurance claims filed BECAUSE of Harvey damage.
+    These are post-event measurements of actual flood damage — treat them as ground truth signals:
+    - claim_count > 100  → confirmed flooding → flood_extent_pct MUST be ≥ 20%
+    - claim_count > 500  → widespread flooding → flood_extent_pct MUST be ≥ 35%
+    - claim_count > 1500 → severe/regional flooding → flood_extent_pct MUST be ≥ 50%
+    - avg_water_depth 0–1 ft → damage_severity_pct MUST be ≥ 10%
+    - avg_water_depth 1–3 ft → damage_severity_pct MUST be ≥ 20%
+    - avg_water_depth 3–6 ft → damage_severity_pct MUST be ≥ 40%
+    - avg_water_depth > 6 ft → damage_severity_pct MUST be ≥ 65%
+
+    ## CRITICAL: REGIONAL HARVEY TWEETS ARE LOCAL EVIDENCE
+    During Harvey, Harris County experienced catastrophic uniform flooding across the metro area.
+    Tweets mentioning "flooding in Houston area", "Harvey flooding", "1000-year flood event",
+    "historic flooding in Houston" ARE evidence that flooding occurred in every Harris County ZIP.
+    Do NOT dismiss these as "too general." Their presence means flood_extent_pct ≥ 15% for any
+    Harris County ZIP. Cite them as supporting evidence in your reasoning.
+
+    ## NEVER RETURN 0% WHEN HARVEY EVIDENCE EXISTS
+    Do NOT return flood_extent_pct=0 or damage_severity_pct=0 if ANY of the following are true:
+    - Harvey NFIP claims > 0 for this ZIP
+    - Peak rainfall ≥ 20 inches for this ZIP
+    - Any tweet mentions Harvey flooding in Houston/Harris County
+    In these cases, the ZIP was affected — estimate the degree, not whether it was affected.
+
+    ## SENSOR DATA INTERPRETATION:
     - Hurricane Harvey PEAK FLOODING was Aug 27-28, 2017.
-    - If query window is AFTER peak (e.g., Sept 1-10), sensor showing "0.0 inches" means water RECEDED,
-      NOT that flooding didn't happen.
-    - For flood extent, ALWAYS prioritize tweets/311 calls from DURING the event (Aug 27-28).
-    - Sensor data from post-event periods (Sept+) should be interpreted as "water receded", not "no flooding occurred".
-    - If tweets report flooding but sensor shows 0.0 during Sept, the flooding DID happen - water just receded by then.
-    
-    ## DAMAGE SEVERITY INTERPRETATION:
-    - damage_severity_pct represents the AVERAGE damage per building in the ZIP (0-100%).
-    - This is NOT "overall severity" but: "What fraction of a typical building's value was destroyed?"
-    - Base your estimate on tweets and 311 calls — cite specific reports of structural damage.
-    - The NFIP historical risk profile (if provided) reflects long-term flood exposure, NOT Harvey damage.
-      You MAY use the risk tier and annual claim rate to adjust flood_extent_pct upward for HIGH-risk
-      ZIPs when tweet/311 evidence is sparse (e.g. HIGH risk ZIP with 200+ claims/yr → likely significant flooding).
-      Do NOT use it for damage_severity_pct — damage must come from tweets/311 evidence only.
-    - Water depth language in tweets/311 is the best damage signal:
-      <1 ft = minor (~5-15%), 1-3 ft = moderate (15-35%), 3-6 ft = severe (35-60%), >6 ft = catastrophic (60-100%).
-    - Tweet/311 language: "water in living room" (~15-30%), "total loss/destroyed" (~70-100%), "flooded but OK" (~5-20%).
-    - If no damage-specific reports exist, report low confidence and estimate conservatively.
+    - Sensor reading of 0.0 inches AFTER Aug 28 means water RECEDED — NOT that flooding didn't happen.
+    - Prioritize tweets/311 calls from Aug 27-28 for flood extent over any post-peak sensor readings.
+
+    ## DAMAGE SEVERITY:
+    - damage_severity_pct = average fraction of building value destroyed across all buildings (0-100%).
+    - Water depth signals: <1 ft=minor (5-15%), 1-3 ft=moderate (15-35%), 3-6 ft=severe (35-60%), >6 ft=catastrophic (60-100%).
+    - Tweet language: "water in living room" (~15-30%), "total loss/destroyed" (~70-100%), "flooded but OK" (~5-20%).
+    - Use Harvey NFIP avg_water_depth_ft as a floor when tweet/311 damage reports are absent.
 
     Respond with valid JSON matching the schema provided by the user.
     """
@@ -218,9 +234,26 @@ NOT that flooding didn't happen. Prioritize tweets/311 calls from Aug 27-28 for 
     else:
         caption_block = ""
 
-    # Spatial priors (rainfall + NFIP)
+    # Spatial priors (rainfall + NFIP + Harvey claims)
     spatial_priors = context.get("spatial_priors", [])
     spatial_section = "\n".join(f"- {p}" for p in spatial_priors) if spatial_priors else "(No spatial priors available)"
+
+    # Hard evidence floors — computed from Harvey NFIP claims + rainfall
+    floors = context.get("evidence_floors", {})
+    flood_floor = floors.get("flood_floor", 0.0)
+    damage_floor = floors.get("damage_floor", 0.0)
+    floor_reasons = floors.get("reasons", [])
+    if flood_floor > 0 or damage_floor > 0:
+        floor_lines = "\n".join(f"  - {r}" for r in floor_reasons)
+        floor_block = f"""
+⚠️ HARD MINIMUM CONSTRAINTS (you MUST NOT go below these — they are computed from data):
+  flood_extent_pct  ≥ {flood_floor}%
+  damage_severity_pct ≥ {damage_floor}%
+Reasons:
+{floor_lines}
+"""
+    else:
+        floor_block = ""
 
     return dedent(
         f"""
@@ -230,31 +263,32 @@ NOT that flooding didn't happen. Prioritize tweets/311 calls from Aug 27-28 for 
 
         {sensor_section}
 
-        ### Spatial Priors for ZIP {zip_code} (Quantitative, ZIP-Specific):
+        ### Harvey 2017 Evidence & Spatial Priors for ZIP {zip_code} (USE AS PRIMARY EVIDENCE):
         {spatial_section}
 
         ### FEMA Prior Knowledge (Historical Context):
         {context.get('kb_summary', '')}
 
-        ### Tweets (Relevant to ZIP {zip_code}) - REAL-TIME REPORTS:
+        ### Tweets (Relevant to ZIP {zip_code}):
+        NOTE: Tweets tagged "(Content Relevant)" are regional Harvey reports — they confirm flooding
+        occurred across Harris County including this ZIP. Do NOT dismiss them as too general.
         {tweet_section}
 
-        ### 311 Calls (ZIP {zip_code}, Exact Match) - REAL-TIME REPORTS:
+        ### 311 Calls (ZIP {zip_code}, Exact Match):
         {call_section}
         {caption_block}
-
+        {floor_block}
         Respond with JSON matching schema:
         {{
           "reasoning": str,  // Your analysis of the evidence
           "zip": str,
           "time_window": {{"start": str, "end": str}},
           "estimates": {{
-            "flood_extent_pct": float,  // HAZARD: % of ZIP area covered by floodwater (0-100). Base this on Imagery + Water Reports.
-            "damage_severity_pct": float, // CONSEQUENCE: Average structural damage per building (0-100). 
-                                          // This represents the MEAN damage across all buildings in the ZIP.
-                                          // Example: If 30% of buildings are damaged, or average building has 30% damage, output 30.
-                                          // Base on reports of "water inside", "destroyed", "total loss" - count how many buildings affected.
-                                          // IMPORTANT: This is NOT "overall severity" but "average damage per building".
+            "flood_extent_pct": float,  // % of ZIP area flooded (0-100). Use Harvey claims + rainfall + tweets as floor.
+                                          // NEVER output 0 if Harvey claims > 0 or regional Harvey tweets present.
+            "damage_severity_pct": float, // Average structural damage per building (0-100).
+                                          // Use Harvey avg_water_depth_ft as minimum floor when tweet evidence is absent.
+                                          // 0-1ft→≥10%, 1-3ft→≥20%, 3-6ft→≥40%, >6ft→≥65%.
             "roads_impacted": list[str],
             "confidence": float  // 0-1
           }},

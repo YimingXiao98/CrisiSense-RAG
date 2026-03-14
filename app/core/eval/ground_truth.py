@@ -46,14 +46,16 @@ class PDEGroundTruth:
         )
 
     def score(self, zip_code: str) -> Dict[str, float]:
-        """Return damage metrics for a ZIP code (normalized to 0-100%)."""
+        """Return damage metrics for a ZIP code.
+
+        mean_pde is already a 0-1 fraction (average damage per building),
+        so multiply by 100 to get a percentage directly.
+        No cross-ZIP normalization — that would distort absolute accuracy evaluation.
+        """
         entry = self.data.get(str(zip_code), {})
         mean_pde = entry.get("mean_pde", 0.0)
-        # Normalize to percentage (0-100)
-        damage_pct = (mean_pde / self.max_pde) * 100.0 if self.max_pde > 0 else 0.0
         return {
-            "damage_pct": round(damage_pct, 2),
-            "mean_pde": mean_pde,
+            "mean_pde": round(mean_pde * 100.0, 2),  # convert 0-1 fraction to 0-100%
             "point_count": entry.get("point_count", 0),
         }
 

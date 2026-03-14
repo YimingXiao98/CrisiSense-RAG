@@ -1,4 +1,4 @@
-"""Client for text-only analysis using Gemini, OpenAI, or Hugging Face models."""
+"""Client for text-only analysis using Gemini, OpenAI, or OpenRouter models."""
 
 from __future__ import annotations
 
@@ -10,37 +10,22 @@ from loguru import logger
 from .prompts import TEXT_ONLY_SYSTEM_PROMPT, build_user_prompt
 
 
-# Hugging Face model configurations (via OpenAI-compatible API)
-HF_MODEL_CONFIGS = {
-    # Meta Llama models
-    "llama-3.3-70b": {
-        "model": "meta-llama/Llama-3.3-70B-Instruct",
-        "provider_suffix": ":together",  # Together AI backend
-    },
-    "llama-3.1-70b": {
-        "model": "meta-llama/Llama-3.1-70B-Instruct",
-        "provider_suffix": ":together",
-    },
+# OpenRouter model ID mappings (short name → OpenRouter model string)
+OPENROUTER_MODEL_CONFIGS = {
     # Qwen models
-    "qwen2.5-72b": {
-        "model": "Qwen/Qwen2.5-72B-Instruct",
-        "provider_suffix": ":novita",  # Novita AI backend
-    },
-    "qwen2.5-32b": {
-        "model": "Qwen/Qwen2.5-32B-Instruct",
-        "provider_suffix": ":novita",
-    },
+    "qwen2.5-72b": "qwen/qwen-2.5-72b-instruct",
+    "qwen2.5-32b": "qwen/qwen-2.5-32b-instruct",
+    "qwen3-30b": "qwen/qwen3-30b-a3b",
+    "qwen3-235b": "qwen/qwen3-235b-a22b",
+    "qwen3.5-397b": "qwen/qwen3.5-397b-a17b",
     # Mistral models
-    "mistral-large": {
-        "model": "mistralai/Mistral-Large-Instruct-2411",
-        "provider_suffix": ":together",
-    },
+    "mistral-large": "mistralai/mistral-large",
     # Google Gemma (open-source)
-    "gemma-2-27b": {
-        "model": "google/gemma-2-27b-it",
-        "provider_suffix": ":nebius",
-    },
+    "gemma-2-27b": "google/gemma-2-27b-it",
 }
+
+# Keep HF_MODEL_CONFIGS as alias for backward compatibility with scripts
+HF_MODEL_CONFIGS = {k: {"model": v, "provider_suffix": ""} for k, v in OPENROUTER_MODEL_CONFIGS.items()}
 
 
 class TextAnalysisClient:
@@ -62,9 +47,9 @@ class TextAnalysisClient:
             self._init_gemini(model_name, api_key or os.getenv("GEMINI_API_KEY"))
         elif self.provider == "openai":
             self._init_openai(model_name, api_key or os.getenv("OPENAI_API_KEY"))
-        elif self.provider == "huggingface":
-            self._init_huggingface(model_name, api_key or os.getenv("HF_TOKEN"))
-        elif self.provider == "openrouter":
+        elif self.provider in ("huggingface", "openrouter"):
+            # huggingface is redirected to openrouter
+            self.provider = "openrouter"
             self._init_openrouter(model_name, api_key or os.getenv("OPENROUTER_API"))
         else:
             raise ValueError(f"Unsupported provider: {self.provider}")
@@ -149,6 +134,10 @@ class TextAnalysisClient:
         if not model_name:
             model_name = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash")
 
+        # Resolve short name (e.g. "qwen2.5-72b") to full OpenRouter model ID
+        if model_name in OPENROUTER_MODEL_CONFIGS:
+            model_name = OPENROUTER_MODEL_CONFIGS[model_name]
+
         self.openrouter_client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=api_key,
@@ -200,7 +189,7 @@ class TextAnalysisClient:
     def _analyze_gemini(self, prompt: str) -> Dict[str, Any]:
         """Analyze using Gemini."""
         response = self.gemini_model.generate_content(
-            prompt, generation_config={"response_mime_type": "application/json"}
+            prompt, generation_config={"response_mime_type": "application/json", "temperature": 0.0}
         )
         return json.loads(response.text)
 
@@ -213,6 +202,7 @@ class TextAnalysisClient:
                 {"role": "user", "content": prompt},
             ],
             response_format={"type": "json_object"},
+            temperature=0.0,
         )
         return json.loads(response.choices[0].message.content)
 
@@ -280,6 +270,7 @@ class TextAnalysisClient:
             ],
             response_format={"type": "json_object"},
             max_tokens=4096,
+            temperature=0.0,
         )
         raw_text = response.choices[0].message.content
         # Handle markdown-wrapped JSON that some models return
