@@ -60,7 +60,7 @@ def format_answer_text(answer: Dict[str, Any]) -> str:
         parts.append(f"Summary: {summary}")
 
     if estimates := answer.get("estimates"):
-        parts.append(f"Damage Estimate: {estimates.get('flood_impact_pct', 'N/A')}%")
+        parts.append(f"Flood Extent: {estimates.get('flood_extent_pct', 'N/A')}%, Damage: {estimates.get('damage_severity_pct', 'N/A')}%")
         parts.append(f"Confidence: {estimates.get('confidence', 'N/A')}")
         if roads := estimates.get("roads_affected"):
             parts.append(f"Roads Affected: {roads}")
@@ -81,7 +81,7 @@ def extract_retrieval_metadata(context: Dict[str, Any]) -> Dict[str, Any]:
     """Extract metadata about retrieval results for analysis."""
     tweets = context.get("tweets", [])
     calls = context.get("calls", [])
-    gauges = context.get("gauges", [])
+    sensors = context.get("sensors", [])
 
     # Extract IDs with fallback chain
     tweet_ids = []
@@ -91,29 +91,26 @@ def extract_retrieval_metadata(context: Dict[str, Any]) -> Dict[str, Any]:
 
     call_ids = []
     for c in calls:
+        # doc_id is injected by _get_311_by_zip into the payload
         cid = c.get("doc_id") or c.get("record_id") or c.get("id") or ""
         call_ids.append(cid)
 
-    # Extract sensor IDs from gauges
+    # Extract sensor IDs from sensors (HCFCD rain gauges)
     sensor_ids = []
-    for g in gauges:
-        sid = (
-            g.get("sensor_id")
-            or g.get("doc_id", "").replace("gauge_", "").split("_")[0]
-            or ""
-        )
+    for s in sensors:
+        sid = str(s.get("sensor_id", ""))
         if sid and sid not in sensor_ids:
             sensor_ids.append(sid)
 
     return {
         "tweet_count": len(tweets),
         "tweet_ids": tweet_ids,
-        "gauge_count": len(gauges),
+        "sensor_count": len(sensors),
         "sensor_ids": sensor_ids,
         "call_311_count": len(calls),
         "call_311_ids": call_ids,
         "imagery_tile_count": len(context.get("imagery_tiles", [])),
-        "has_sensor_data": len(gauges) > 0 or context.get("sensor_table") is not None,
+        "has_sensor_data": len(sensors) > 0,
     }
 
 
@@ -173,11 +170,11 @@ def run_baseline_experiment(
             provider = "gemini"
         logger.info(f"Using text model: {text_model} (provider: {provider})")
     else:
-    # Ensure consistent model usage: default to gemini if not specified
-    provider = config.get("provider", "gemini")
-    if provider != "gemini" and provider != "openai":
-        logger.warning(f"Unknown provider '{provider}', defaulting to 'gemini'")
-        provider = "gemini"
+        # Ensure consistent model usage: default to gemini if not specified
+        provider = config.get("provider", "gemini")
+        if provider != "gemini" and provider != "openai":
+            logger.warning(f"Unknown provider '{provider}', defaulting to 'gemini'")
+            provider = "gemini"
     
     client = SplitPipelineClient(
         provider=provider,
@@ -296,24 +293,19 @@ def run_baseline_experiment(
                     "zip": query.zip,
                     "start_date": str(query.start),
                     "end_date": str(query.end),
-                    "comment": getattr(query, "comment", ""),
                 },
                 "retrieval_metadata": extract_retrieval_metadata(context),
                 "model_response": {
                     "raw": answer,
                     "formatted": format_answer_text(answer),
-                    "flood_impact_pct": float(
-                        answer.get("estimates", {}).get("flood_impact_pct", 0.0)
-                    ),
-                    "confidence": float(
-                        answer.get("estimates", {}).get("confidence", 0.0)
-                    ),
-                    # Add new fields for dual metrics if they exist in the answer
                     "flood_extent_pct": float(
                         answer.get("estimates", {}).get("flood_extent_pct", 0.0)
                     ),
                     "damage_severity_pct": float(
                         answer.get("estimates", {}).get("damage_severity_pct", 0.0)
+                    ),
+                    "confidence": float(
+                        answer.get("estimates", {}).get("confidence", 0.0)
                     ),
                 },
                 "ground_truth": {
@@ -353,8 +345,8 @@ def run_baseline_experiment(
 
             records.append(record)
 
-            # Log progress - compare flood_impact_pct vs flooded_pct (both %)
-            pred_impact = record["model_response"]["flood_impact_pct"]
+            # Log progress - compare flood_extent_pct vs flooded_pct (both %)
+            pred_impact = record["model_response"]["flood_extent_pct"]
             actual_flooded = truth.get("flooded_pct", 0.0)
             logger.info(
                 f"  Predicted: {pred_impact:.1f}%, Ground Truth: {actual_flooded:.1f}%, "

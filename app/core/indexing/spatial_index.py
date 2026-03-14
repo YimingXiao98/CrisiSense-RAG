@@ -96,23 +96,19 @@ class SpatialIndex:
             tiles = self._filter_by_time(tiles, start, end)
 
         if not tiles:
-            # 3. Fallback: Global time search
-            logger.warning("No imagery tiles in spatial range; falling back to global time search", zip=zip_code)
-            tiles = self._filter_by_time(self.imagery, start, end)
+            # 3. Wider spatial fallback (30km) — still geographically anchored
+            logger.warning("No imagery tiles within 5km; trying 30km radius", zip=zip_code)
+            spatial_candidates = self._query_near_zip(zip_code, radius_km=30.0)
+            seen_ids = {t["tile_id"] for t in tiles}
+            for cand in spatial_candidates:
+                if cand["tile_id"] not in seen_ids:
+                    tiles.append(cand)
+            tiles = self._filter_by_time(tiles, start, end)
 
         if not tiles:
-             # 4. Last resort: Most recent globally
-            logger.warning("No imagery tiles in time window; returning most recent globally", zip=zip_code)
-            latest = sorted(
-                [
-                    (self._parse_timestamp(tile.get("timestamp")), tile)
-                    for tile in self.imagery
-                    if self._parse_timestamp(tile.get("timestamp"))
-                ],
-                key=lambda item: item[0],
-                reverse=True,
-            )
-            return [tile for _, tile in latest[:k]]
+            # No coverage within 30km — return empty rather than geographically wrong tiles
+            logger.warning("No imagery tiles within 30km of ZIP; returning empty", zip=zip_code)
+            return []
 
         return tiles[:k]
 

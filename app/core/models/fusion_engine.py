@@ -30,10 +30,14 @@ To avoid errors from conflicting signals, use visual ONLY when it CONFIRMS text:
 - If CONFLICT between text and visual → IGNORE visual, use TEXT
 
 ### For DAMAGE:
-- TEXT is your baseline (internal damage not visible from aerial)
-- If text says damage AND visual shows damage → CONFIRMED, use higher value
-- If text says damage BUT visual shows none → Use TEXT (internal damage)
-- Visual can BOOST damage if it shows debris/destruction text missed
+- TEXT is your FLOOR. fused_damage MUST be >= text_damage.
+- Aerial imagery cannot detect interior flooding, water intrusion, or structural
+  damage below roof level. "No visible damage" in imagery is NOT evidence of no
+  damage — it is absence of observable evidence. These are different things.
+- If text says damage AND visual shows damage → use the higher of the two values
+- If text says damage BUT visual shows none → USE TEXT (internal damage hidden)
+- Visual can BOOST damage if it shows debris/destruction text missed, but it
+  CANNOT veto or reduce a damage estimate that text has established.
 
 ### Key Rule: When in CONFLICT, default to TEXT. Visual is confirmatory only.
 
@@ -135,7 +139,7 @@ class FusionEngine:
             "damage_severity_pct", text_estimates.get("structural_damage_pct", None)
         )
         text_damage = float(text_damage_raw) if text_damage_raw is not None else 0.0
-        
+
         text_flood_raw = text_estimates.get("flood_extent_pct", None)
         text_flood = float(text_flood_raw) if text_flood_raw is not None else 0.0
 
@@ -143,7 +147,7 @@ class FusionEngine:
             "damage_severity_pct", visual_overall.get("structural_damage_pct", None)
         )
         visual_damage = float(visual_damage_raw) if visual_damage_raw is not None else 0.0
-        
+
         # Support new schema: flood_evidence_pct (post-flood indicators)
         visual_flood_raw = visual_overall.get(
             "flood_evidence_pct",
@@ -156,15 +160,15 @@ class FusionEngine:
         # NEW: Get text confirmation level from visual analysis
         text_confirmation = visual_overall.get("text_confirmation_level", "unknown")
 
-        text_confidence = text_estimates.get("confidence", 0.5)
-        visual_confidence = visual_overall.get("confidence", 0.5)
+        text_confidence = float(text_estimates.get("confidence") or 0.5)
+        visual_confidence = float(visual_overall.get("confidence") or 0.5)
 
         # TEXT-GUIDED VISUAL CONFIRMATION FUSION:
         # Visual analysis now explicitly reports whether it confirms text.
         # Use this to make smarter fusion decisions.
 
         # REFINED FUSION LOGIC: More conservative for flood extent, better for damage
-        
+
         # CRITICAL FIX: Handle zero-zero case explicitly
         if text_flood == 0.0 and visual_flood == 0.0:
             fused_flood = 0.0
@@ -247,7 +251,7 @@ class FusionEngine:
         # - Use confidence-weighted fusion for better integration
         # - Visual can contribute more since damage is persistent
         # - Only incorporate visual if confidence is sufficient
-        
+
         # CRITICAL FIX: Handle zero-zero case explicitly
         if text_damage == 0.0 and visual_damage == 0.0:
             fused_damage = 0.0
@@ -255,10 +259,10 @@ class FusionEngine:
             # Compute agreement level
             damage_diff = abs(text_damage - visual_damage)
             agreement_threshold = 20  # percentage points
-            
+
             # Only use visual if confidence is reasonable
             use_visual_for_damage = visual_confidence > 0.5
-            
+
             if not use_visual_for_damage:
                 # Low visual confidence - trust text only
                 fused_damage = text_damage
@@ -293,6 +297,13 @@ class FusionEngine:
                 visual_weight = 0.4 + (visual_confidence - 0.5) * 0.2
                 total_weight = text_weight + visual_weight
                 fused_damage = (text_damage * text_weight + visual_damage * visual_weight) / total_weight
+
+        # Visual can only RAISE damage above the text baseline, never lower it.
+        # Aerial imagery cannot detect interior flooding or subtle structural damage,
+        # so "no visible damage" is not evidence of no damage — it is absence of
+        # observable evidence, which is different. Text (311 calls, NFIP claims, tweets)
+        # is the authoritative source for damage; visual is additive only.
+        fused_damage = max(fused_damage, text_damage)
 
         # Detect conflicts (for logging only, not used in decision)
         AGREEMENT_THRESHOLD = 30  # percentage points
@@ -377,7 +388,10 @@ Produce a unified assessment. Identify and resolve any conflicts.
 
 CRITICAL FUSION RULES:
 - For FLOOD EXTENT: TRUST TEXT. If text reports flooding but visual shows dry, the water receded before image capture. Use text estimate.
-- For DAMAGE: Visual is ADDITIVE. If visual shows damage, boost the estimate. If visual shows "no damage" but text reports damage, trust text (internal damage hidden).
+- For DAMAGE: Visual is ADDITIVE and text is the FLOOR. fused_damage >= text_damage always.
+  Aerial imagery cannot detect interior water intrusion or structural damage below roof level.
+  "No visible damage" in imagery is NOT evidence of no damage. If visual shows damage, boost
+  the estimate above text. If visual shows no damage but text reports damage, use TEXT.
 
 Respond with JSON:
 {{
@@ -385,7 +399,7 @@ Respond with JSON:
     "time_window": {json.dumps(time_window)},
     "estimates": {{
         "flood_extent_pct": float,  // 0-100, HAZARD: % of area flooded. TRUST TEXT over visual.
-        "damage_severity_pct": float,  // 0-100, CONSEQUENCE: structural damage. Visual can boost, not veto.
+        "damage_severity_pct": float,  // 0-100, MUST be >= text damage_severity_pct. Visual boosts only.
         "confidence": float  // 0.0-1.0
     }},
     "conflicts": list[str],  // any discrepancies between text and visual

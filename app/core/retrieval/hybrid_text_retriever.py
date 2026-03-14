@@ -148,6 +148,7 @@ class HybridTextRetriever:
             if not doc:
                 continue
             payload = dict(doc.get("payload") or {})
+            payload["doc_id"] = doc_id
             payload["source"] = doc.get("source")
             results.append(payload)
             if len(results) >= limit:
