@@ -77,9 +77,10 @@ logs/
 # Local data (large files, not tracked)
 data/
 
-# Config files (keep only the 207-query complete map)
+# Config files (keep only the canonical experiment configs)
 config/queries_*.json
 !config/queries_complete_map.json
+!config/queries_imagery_covered_110.json
 config/archive/
 
 # LaTeX build artifacts

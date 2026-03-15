@@ -121,11 +121,13 @@ def run_baseline_experiment(
     limit: Optional[int] = None,
     run_judge: bool = False,
     no_captions: bool = False,
+    no_tweets: bool = False,
     no_visual: bool = False,
     judge_name: str = "gpt-4o-mini",
     shuffle: bool = False,
     seed: int = 42,
     text_model: str = None,
+    vision_model: str = None,
 ) -> None:
     """Run baseline retrieval experiment and save results."""
 
@@ -134,6 +136,9 @@ def run_baseline_experiment(
     if no_visual:
         logger.info("Override: Disabling visual analysis")
         config["enable_visual"] = False
+        enable_visual = False
+    else:
+        enable_visual = config.get("enable_visual", True)
 
     queries = [RAGQuery(**q) for q in config["queries"]]
 
@@ -162,7 +167,9 @@ def run_baseline_experiment(
     if text_model:
         # If a specific text model is specified, determine the provider
         from app.core.models.text_client import OPENROUTER_MODEL_CONFIGS
-        if text_model in OPENROUTER_MODEL_CONFIGS or "/" in text_model:
+        if text_model.startswith("models/"):  # Google AI SDK format, e.g. "models/gemini-2.5-flash"
+            provider = "gemini"
+        elif text_model in OPENROUTER_MODEL_CONFIGS or "/" in text_model:
             provider = "openrouter"
         elif text_model.startswith("gpt"):
             provider = "openai"
@@ -176,13 +183,40 @@ def run_baseline_experiment(
             logger.warning(f"Unknown provider '{provider}', defaulting to 'gemini'")
             provider = "gemini"
     
+    # Determine visual provider from vision_model if given
+    visual_provider = None
+    if vision_model:
+        from app.core.models.text_client import OPENROUTER_MODEL_CONFIGS
+        if vision_model in OPENROUTER_MODEL_CONFIGS or "/" in vision_model:
+            visual_provider = "openrouter"
+        elif vision_model.startswith("gpt"):
+            visual_provider = "openai"
+        else:
+            visual_provider = "gemini"
+        logger.info(f"Using vision model: {vision_model} (provider: {visual_provider})")
+
+    # Determine experiment mode for metadata
+    if no_visual:
+        if no_tweets:
+            exp_mode = "no_tweets"
+        elif no_captions:
+            exp_mode = "text_only"
+        else:
+            exp_mode = "text_caption"
+    elif no_tweets:
+        exp_mode = "multimodal_no_tweets"
+    else:
+        exp_mode = "multimodal"
+
     client = SplitPipelineClient(
         provider=provider,
-        enable_visual=config.get("enable_visual", True),
+        enable_visual=enable_visual,
         use_llm_fusion=False,  # Use heuristic fusion with confirmation logic
         text_model=text_model,
+        visual_provider=visual_provider,
+        visual_model=vision_model,
     )
-    logger.info(f"Using provider: {provider} for {experiment_name}")
+    logger.info(f"Using provider: {provider}, mode: {exp_mode} for {experiment_name}")
     # Use flood depth as ground truth (more accurate than claims)
     flood_depth_path = locator.base_dir / "processed" / "flood_depth_by_zip.json"
     if flood_depth_path.exists():
@@ -225,6 +259,7 @@ def run_baseline_experiment(
         "timestamp": datetime.now().isoformat(),
         "config_path": str(config_path),
         "config_hash": compute_config_hash(config),
+        "mode": exp_mode,  # "text_only" | "text_caption" | "multimodal"
         "settings": {
             "enable_reranker": settings.enable_reranker,
             "enable_geo_boost": settings.enable_geo_boost,
@@ -233,11 +268,8 @@ def run_baseline_experiment(
             # Model configuration for reproducibility
             "model_provider": provider,
             "text_model": text_model or (os.getenv("GEMINI_MODEL", "gemini-1.5-flash") if provider == "gemini" else os.getenv("OPENAI_MODEL", "gpt-4o-mini") if provider == "openai" else None),
-            "gemini_model": os.getenv("GEMINI_MODEL", "gemini-1.5-flash") if provider == "gemini" else None,
-            "openai_model": os.getenv("OPENAI_MODEL", "gpt-4o-mini") if provider == "openai" else None,
+            "vision_model": vision_model or client.visual_model or os.getenv("OPENROUTER_VISION_MODEL") or os.getenv("GEMINI_VISION_MODEL") or os.getenv("OPENAI_VISION_MODEL"),
             "visual_model_provider": client.visual_provider if hasattr(client, 'visual_provider') else provider,
-            "gemini_vision_model": os.getenv("GEMINI_VISION_MODEL") if provider == "gemini" else None,
-            "openai_vision_model": os.getenv("OPENAI_VISION_MODEL") if provider == "openai" else None,
         },
         "total_queries": len(queries),
     }
@@ -257,6 +289,9 @@ def run_baseline_experiment(
 
             if no_captions:
                 context["captions"] = []
+
+            if no_tweets:
+                context["tweets"] = []
 
             # Step 2: Generate VLM response
             answer = client.infer(
@@ -470,6 +505,11 @@ if __name__ == "__main__":
         help="Exclude image captions from text context",
     )
     parser.add_argument(
+        "--no_tweets",
+        action="store_true",
+        help="Exclude tweets from context (no-social-media ablation for R1-C6)",
+    )
+    parser.add_argument(
         "--no_visual",
         action="store_true",
         help="Disable visual analysis (override config)",
@@ -489,7 +529,13 @@ if __name__ == "__main__":
         "--text-model",
         type=str,
         default=None,
-        help="Text model to use (e.g., 'llama-3.3-70b', 'qwen2.5-72b'). Overrides provider.",
+        help="Text model short name or OpenRouter ID (e.g., 'qwen3.5-397b', 'qwen/qwen3.5-397b-a17b').",
+    )
+    parser.add_argument(
+        "--vision-model",
+        type=str,
+        default=None,
+        help="Vision model short name or OpenRouter ID for visual analysis (e.g., 'qwen3.5-397b'). Only used when visual is enabled.",
     )
 
     args = parser.parse_args()
@@ -501,8 +547,10 @@ if __name__ == "__main__":
         experiment_name=args.name,
         run_judge=args.judge,
         no_captions=args.no_captions,
+        no_tweets=args.no_tweets,
         no_visual=args.no_visual,
         shuffle=args.shuffle,
         seed=args.seed,
         text_model=args.text_model,
+        vision_model=args.vision_model,
     )
