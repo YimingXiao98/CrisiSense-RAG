@@ -24,7 +24,7 @@
 #   qwen35        : qwen3.5-397b               (OpenRouter)
 #   gpt5mini      : openai/gpt-5-mini          (OpenRouter)
 #
-# Visual model for multimodal/no_tweets: openai/gpt-4o (OpenRouter)
+# Visual model: same as text model (each model uses its own vision capability)
 #
 # Total: 12 runs × 110 queries + 3 runs × 207 queries = 1,941 API calls
 #
@@ -46,10 +46,14 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_ROOT"
 
 CONFIG_110="$PROJECT_ROOT/config/queries_imagery_covered_110.json"
-CONFIG_207="$PROJECT_ROOT/config/queries_complete_map.json"
+CONFIG_97="$PROJECT_ROOT/config/queries_no_imagery_97.json"   # text_only suppl (97 ZIPs w/o imagery)
 OUT_DIR="$PROJECT_ROOT/data/experiments/full_207_3-15"
 RUN_SCRIPT="$SCRIPT_DIR/run_baseline_experiment.py"
-VISION_MODEL="openai/gpt-4o"
+
+# Vision model IDs — each model uses itself for visual analysis
+GEMINI25_MODEL="models/gemini-2.5-flash"
+QWEN35_MODEL="qwen3.5-397b"
+GPT5MINI_MODEL="openai/gpt-5-mini"
 
 DRY_RUN=false
 MODEL_FILTER=""
@@ -124,8 +128,8 @@ if should_run gemini25 multimodal; then
         --output "$OUT_DIR/exp_gemini25_multimodal.json" \
         --name "gemini25_multimodal" \
         --no_captions \
-        --text-model "models/gemini-2.5-flash" \
-        --vision-model "$VISION_MODEL"
+        --text-model "$GEMINI25_MODEL" \
+        --vision-model "$GEMINI25_MODEL"
 fi
 
 if should_run gemini25 no_tweets; then
@@ -134,8 +138,8 @@ if should_run gemini25 no_tweets; then
         --output "$OUT_DIR/exp_gemini25_no_tweets.json" \
         --name "gemini25_no_tweets" \
         --no_captions --no_tweets \
-        --text-model "models/gemini-2.5-flash" \
-        --vision-model "$VISION_MODEL"
+        --text-model "$GEMINI25_MODEL" \
+        --vision-model "$GEMINI25_MODEL"
 fi
 
 # ── Qwen3.5-397B ──────────────────────────────────────────────────────────────
@@ -164,8 +168,8 @@ if should_run qwen35 multimodal; then
         --output "$OUT_DIR/exp_qwen35_multimodal.json" \
         --name "qwen35_multimodal" \
         --no_captions \
-        --text-model "qwen3.5-397b" \
-        --vision-model "$VISION_MODEL"
+        --text-model "$QWEN35_MODEL" \
+        --vision-model "$QWEN35_MODEL"
 fi
 
 if should_run qwen35 no_tweets; then
@@ -174,8 +178,8 @@ if should_run qwen35 no_tweets; then
         --output "$OUT_DIR/exp_qwen35_no_tweets.json" \
         --name "qwen35_no_tweets" \
         --no_captions --no_tweets \
-        --text-model "qwen3.5-397b" \
-        --vision-model "$VISION_MODEL"
+        --text-model "$QWEN35_MODEL" \
+        --vision-model "$QWEN35_MODEL"
 fi
 
 # ── GPT-5-mini ────────────────────────────────────────────────────────────────
@@ -204,8 +208,8 @@ if should_run gpt5mini multimodal; then
         --output "$OUT_DIR/exp_gpt5mini_multimodal.json" \
         --name "gpt5mini_multimodal" \
         --no_captions \
-        --text-model "openai/gpt-5-mini" \
-        --vision-model "$VISION_MODEL"
+        --text-model "$GPT5MINI_MODEL" \
+        --vision-model "$GPT5MINI_MODEL"
 fi
 
 if should_run gpt5mini no_tweets; then
@@ -214,41 +218,42 @@ if should_run gpt5mini no_tweets; then
         --output "$OUT_DIR/exp_gpt5mini_no_tweets.json" \
         --name "gpt5mini_no_tweets" \
         --no_captions --no_tweets \
-        --text-model "openai/gpt-5-mini" \
-        --vision-model "$VISION_MODEL"
+        --text-model "$GPT5MINI_MODEL" \
+        --vision-model "$GPT5MINI_MODEL"
 fi
 
 # =============================================================================
-# SUPPLEMENTARY — 207-ZIP full config, text_only only
+# SUPPLEMENTARY — 97 ZIPs without imagery, text_only only
+# Combine output with exp_*_text_only.json (110 ZIPs) for full 207-ZIP result.
 # =============================================================================
 
 if [ -z "$MODE_FILTER" ] || [ "$MODE_FILTER" = "suppl" ]; then
 
     if [ -z "$MODEL_FILTER" ] || [ "$MODEL_FILTER" = "gemini25" ]; then
-        run_experiment "Gemini-2.5-Flash / text_only [207 suppl]" \
-            --config "$CONFIG_207" \
-            --output "$OUT_DIR/suppl_gemini25_text_only_207.json" \
-            --name "gemini25_text_only_207" \
+        run_experiment "Gemini-2.5-Flash / text_only [97 suppl]" \
+            --config "$CONFIG_97" \
+            --output "$OUT_DIR/suppl_gemini25_text_only_97.json" \
+            --name "gemini25_text_only_97" \
             --no_visual --no_captions \
-            --text-model "models/gemini-2.5-flash"
+            --text-model "$GEMINI25_MODEL"
     fi
 
     if [ -z "$MODEL_FILTER" ] || [ "$MODEL_FILTER" = "qwen35" ]; then
-        run_experiment "Qwen3.5-397B / text_only [207 suppl]" \
-            --config "$CONFIG_207" \
-            --output "$OUT_DIR/suppl_qwen35_text_only_207.json" \
-            --name "qwen35_text_only_207" \
+        run_experiment "Qwen3.5-397B / text_only [97 suppl]" \
+            --config "$CONFIG_97" \
+            --output "$OUT_DIR/suppl_qwen35_text_only_97.json" \
+            --name "qwen35_text_only_97" \
             --no_visual --no_captions \
-            --text-model "qwen3.5-397b"
+            --text-model "$QWEN35_MODEL"
     fi
 
     if [ -z "$MODEL_FILTER" ] || [ "$MODEL_FILTER" = "gpt5mini" ]; then
-        run_experiment "GPT-5-mini / text_only [207 suppl]" \
-            --config "$CONFIG_207" \
-            --output "$OUT_DIR/suppl_gpt5mini_text_only_207.json" \
-            --name "gpt5mini_text_only_207" \
+        run_experiment "GPT-5-mini / text_only [97 suppl]" \
+            --config "$CONFIG_97" \
+            --output "$OUT_DIR/suppl_gpt5mini_text_only_97.json" \
+            --name "gpt5mini_text_only_97" \
             --no_visual --no_captions \
-            --text-model "openai/gpt-5-mini"
+            --text-model "$GPT5MINI_MODEL"
     fi
 
 fi
