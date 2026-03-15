@@ -64,25 +64,13 @@ SYSTEM_PROMPT = dedent(
 TEXT_ONLY_SYSTEM_PROMPT = dedent(
     """
     You are an assistant estimating post-disaster impact for Harris County, TX during Hurricane Harvey (Aug 25-Sep 1, 2017).
-    You will be provided with tweets, 311 calls, sensor data, and spatial priors including Harvey NFIP claims.
+    You will be provided with tweets, 311 calls, peak rainfall observations, and a historical flood risk prior.
 
     ## EVIDENCE HIERARCHY — use in this order when estimating:
-    1. ZIP-specific tweets/311 calls (highest weight — direct local reports)
-    2. Harvey 2017 NFIP claims for this ZIP — DIRECT flood+damage evidence (post-event insurance filings)
-    3. Peak rainfall inches — flood extent floor
-    4. Regional Harvey tweets ("flooding in Houston area") — minimum floor for all Harris County ZIPs
-    5. Historical NFIP risk profile — vulnerability context only, NOT Harvey damage
-
-    ## CRITICAL: HARVEY NFIP CLAIMS ARE DIRECT EVIDENCE, NOT A PRIOR
-    The "Harvey 2017 NFIP claims" section contains insurance claims filed BECAUSE of Harvey damage.
-    These are post-event measurements of actual flood damage — treat them as ground truth signals:
-    - claim_count > 100  → confirmed flooding → flood_extent_pct MUST be ≥ 20%
-    - claim_count > 500  → widespread flooding → flood_extent_pct MUST be ≥ 35%
-    - claim_count > 1500 → severe/regional flooding → flood_extent_pct MUST be ≥ 50%
-    - avg_water_depth 0–1 ft → damage_severity_pct MUST be ≥ 10%
-    - avg_water_depth 1–3 ft → damage_severity_pct MUST be ≥ 20%
-    - avg_water_depth 3–6 ft → damage_severity_pct MUST be ≥ 40%
-    - avg_water_depth > 6 ft → damage_severity_pct MUST be ≥ 65%
+    1. ZIP-specific tweets/311 calls (highest weight — direct real-time local reports)
+    2. Peak rainfall inches — direct observational evidence; use as flood extent floor
+    3. Regional Harvey tweets ("flooding in Houston area") — confirms county-wide flooding
+    4. Historical NFIP risk profile — vulnerability prior only, NOT Harvey-specific damage
 
     ## CRITICAL: REGIONAL HARVEY TWEETS ARE LOCAL EVIDENCE
     During Harvey, Harris County experienced catastrophic uniform flooding across the metro area.
@@ -93,21 +81,15 @@ TEXT_ONLY_SYSTEM_PROMPT = dedent(
 
     ## NEVER RETURN 0% WHEN HARVEY EVIDENCE EXISTS
     Do NOT return flood_extent_pct=0 or damage_severity_pct=0 if ANY of the following are true:
-    - Harvey NFIP claims > 0 for this ZIP
     - Peak rainfall ≥ 20 inches for this ZIP
     - Any tweet mentions Harvey flooding in Houston/Harris County
     In these cases, the ZIP was affected — estimate the degree, not whether it was affected.
-
-    ## SENSOR DATA INTERPRETATION:
-    - Hurricane Harvey PEAK FLOODING was Aug 27-28, 2017.
-    - Sensor reading of 0.0 inches AFTER Aug 28 means water RECEDED — NOT that flooding didn't happen.
-    - Prioritize tweets/311 calls from Aug 27-28 for flood extent over any post-peak sensor readings.
 
     ## DAMAGE SEVERITY:
     - damage_severity_pct = average fraction of building value destroyed across all buildings (0-100%).
     - Water depth signals: <1 ft=minor (5-15%), 1-3 ft=moderate (15-35%), 3-6 ft=severe (35-60%), >6 ft=catastrophic (60-100%).
     - Tweet language: "water in living room" (~15-30%), "total loss/destroyed" (~70-100%), "flooded but OK" (~5-20%).
-    - Use Harvey NFIP avg_water_depth_ft as a floor when tweet/311 damage reports are absent.
+    - If tweet/311 evidence is sparse, use rainfall magnitude as a proxy for damage floor.
 
     Respond with valid JSON matching the schema provided by the user.
     """
@@ -192,20 +174,9 @@ def build_user_prompt(
     else:
         call_section = "(No 311 calls found for this location/time)"
 
-    sensor_table = context.get("sensor_table", "")
-    if not sensor_table or "loss_mean" in sensor_table:
-        # The 'loss_mean' table is historical data, not current sensor readings.
-        # To prevent hallucination, we label it clearly or omit it if it's just 0.0
-        sensor_section = f"### Historical Loss Data (Previous Years):\n{sensor_table}"
-    else:
-        # Add temporal warning for sensor data
-        start_date = time_window.get("start", "")
-        sensor_section = f"""### Sensor Data (Rainfall/Water Levels):
-⚠️ TEMPORAL CONTEXT: This sensor data is from {start_date} (query time window).
-If this date is AFTER Aug 28 (peak flooding), sensor showing "0.0" means water RECEDED,
-NOT that flooding didn't happen. Prioritize tweets/311 calls from Aug 27-28 for flood extent.
-
-{sensor_table}"""
+    # Sensor data removed — gauge coverage is limited (7 SE Houston ZIPs only),
+    # all readings are post-flood (Sep 10, 0.0 in), actively misleading.
+    # Peak rainfall is already in spatial_priors via rainfall_peak_by_zip.json.
 
     # Format captions with temporal warning
     captions = context.get("captions", [])
@@ -234,26 +205,11 @@ NOT that flooding didn't happen. Prioritize tweets/311 calls from Aug 27-28 for 
     else:
         caption_block = ""
 
-    # Spatial priors (rainfall + NFIP + Harvey claims)
     spatial_priors = context.get("spatial_priors", [])
-    spatial_section = "\n".join(f"- {p}" for p in spatial_priors) if spatial_priors else "(No spatial priors available)"
+    rainfall_section = spatial_priors[0] if len(spatial_priors) > 0 else "(No rainfall data available)"
+    nfip_prior_section = spatial_priors[1] if len(spatial_priors) > 1 else "(No historical prior available)"
 
-    # Hard evidence floors — computed from Harvey NFIP claims + rainfall
-    floors = context.get("evidence_floors", {})
-    flood_floor = floors.get("flood_floor", 0.0)
-    damage_floor = floors.get("damage_floor", 0.0)
-    floor_reasons = floors.get("reasons", [])
-    if flood_floor > 0 or damage_floor > 0:
-        floor_lines = "\n".join(f"  - {r}" for r in floor_reasons)
-        floor_block = f"""
-⚠️ HARD MINIMUM CONSTRAINTS (you MUST NOT go below these — they are computed from data):
-  flood_extent_pct  ≥ {flood_floor}%
-  damage_severity_pct ≥ {damage_floor}%
-Reasons:
-{floor_lines}
-"""
-    else:
-        floor_block = ""
+    floor_block = ""
 
     return dedent(
         f"""
@@ -261,13 +217,11 @@ Reasons:
         Time window: {time_window['start']} to {time_window['end']}
         Imagery IDs: {[tile['tile_id'] for tile in context.get('imagery_tiles', [])]}
 
-        {sensor_section}
+        ### Rainfall Observations (Direct Evidence — HCFCD gauge network, near-real-time):
+        {rainfall_section}
 
-        ### Harvey 2017 Evidence & Spatial Priors for ZIP {zip_code} (USE AS PRIMARY EVIDENCE):
-        {spatial_section}
-
-        ### FEMA Prior Knowledge (Historical Context):
-        {context.get('kb_summary', '')}
+        ### Historical Flood Risk Prior for ZIP {zip_code} (Pre-event vulnerability context only):
+        {nfip_prior_section}
 
         ### Tweets (Relevant to ZIP {zip_code}):
         NOTE: Tweets tagged "(Content Relevant)" are regional Harvey reports — they confirm flooding
@@ -284,20 +238,16 @@ Reasons:
           "zip": str,
           "time_window": {{"start": str, "end": str}},
           "estimates": {{
-            "flood_extent_pct": float,  // % of ZIP area flooded (0-100). Use Harvey claims + rainfall + tweets as floor.
-                                          // NEVER output 0 if Harvey claims > 0 or regional Harvey tweets present.
+            "flood_extent_pct": float,  // % of ZIP area flooded (0-100). Reason from all evidence.
             "damage_severity_pct": float, // Average structural damage per building (0-100).
-                                          // Use Harvey avg_water_depth_ft as minimum floor when tweet evidence is absent.
-                                          // 0-1ft→≥10%, 1-3ft→≥20%, 3-6ft→≥40%, >6ft→≥65%.
+                                          // Estimate from tweet/311 language about damage severity.
             "roads_impacted": list[str],
             "confidence": float  // 0-1
           }},
           "evidence_refs": {{
             "imagery_tile_ids": list[str],
             "tweet_ids": list[str],
-            "call_311_ids": list[str],
-            "sensor_ids": list[str],
-            "kb_refs": list[str]
+            "call_311_ids": list[str]
           }},
           "natural_language_summary": str
         }}

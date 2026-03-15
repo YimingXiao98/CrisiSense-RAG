@@ -175,7 +175,12 @@ class VisualAnalysisClient:
         if not api_key:
             logger.warning("OPENROUTER_API not set. VisualAnalysisClient will fail.")
 
-        self.model_name = model_name or os.getenv("OPENROUTER_VISION_MODEL", "openai/gpt-4o")
+        model_name = model_name or os.getenv("OPENROUTER_VISION_MODEL", "openai/gpt-4o")
+        # Resolve short names using the same mapping as the text client
+        from .text_client import OPENROUTER_MODEL_CONFIGS
+        if model_name in OPENROUTER_MODEL_CONFIGS:
+            model_name = OPENROUTER_MODEL_CONFIGS[model_name]
+        self.model_name = model_name
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=api_key,

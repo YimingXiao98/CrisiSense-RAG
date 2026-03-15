@@ -184,26 +184,7 @@ class SplitPipelineClient:
             fused_result = self._fusion_engine.fuse(
                 text_result, visual_result, zip_code, time_window
             )
-            # Apply evidence-based floors (Harvey NFIP claims + rainfall) post-hoc.
-            # The LLM may ignore floor constraints in the prompt, so we enforce them here.
-            try:
-                from app.core.retrieval.context_packager import compute_evidence_floors as _cef
-                _floors = _cef(zip_code)
-                _flood_floor = _floors.get("flood_floor", 0.0)
-                _damage_floor = _floors.get("damage_floor", 0.0)
-                _est = fused_result.get("estimates") or {}
-                if not isinstance(fused_result.get("estimates"), dict):
-                    fused_result["estimates"] = {}
-                _cur_flood = float(_est.get("flood_extent_pct") or 0)
-                _cur_dmg   = float(_est.get("damage_severity_pct") or 0)
-                if _flood_floor > 0 and _cur_flood < _flood_floor:
-                    logger.info(f"Evidence flood floor: {_cur_flood:.1f}% → {_flood_floor:.1f}% (ZIP {zip_code})")
-                    fused_result["estimates"]["flood_extent_pct"] = _flood_floor
-                if _damage_floor > 0 and _cur_dmg < _damage_floor:
-                    logger.info(f"Evidence damage floor: {_cur_dmg:.1f}% → {_damage_floor:.1f}% (ZIP {zip_code})")
-                    fused_result["estimates"]["damage_severity_pct"] = _damage_floor
-            except Exception as _e:
-                logger.warning(f"Evidence floor application failed: {_e}")
+            # No post-hoc floor enforcement — LLM reasons freely from evidence in prompt.
         else:
             fused_result = text_result
 

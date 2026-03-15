@@ -94,20 +94,68 @@ class HybridTextRetriever:
             sensors = self.spatial_index.nearest_sensors_by_zip(query.zip, n=3)
 
         query_str = query.text_query or f"Harvey flood damage impact summary for zip {query.zip} between {start_date} and {end_date}."
-        text_docs = self._hybrid_search(
+        witness_query = "flooding water house street rescue neighborhood bayou flooded damage"
+
+        # GPS-first tweet retrieval:
+        # Pass 1 — GPS-exact tweets searched with witness-oriented query (guaranteed slots)
+        # Pass 2 — regional tweets fill remaining slots using the standard damage query
+        gps_tweets = self._hybrid_search(
+            query_text=witness_query,
+            zip_code=query.zip,
+            start=start_date,
+            end=end_date,
+            limit=plan.text_n,
+            source_filter="tweet",
+            gps_only=True,
+        )
+        remaining = plan.text_n - len(gps_tweets)
+        gps_ids = {t["doc_id"] for t in gps_tweets}
+        regional_tweets = self._hybrid_search(
             query_text=query_str,
             zip_code=query.zip,
             start=start_date,
             end=end_date,
-            limit=max(plan.text_n * 3, 50),
+            limit=remaining + 20,  # over-fetch to allow dedup
+            source_filter="tweet",
+            exclude_ids=gps_ids,
+        )
+        tweets = gps_tweets + regional_tweets[:remaining]
+
+        # ZIP-first 311 call retrieval (mirrors GPS-first tweet logic):
+        # Pass 1 — ZIP-matched calls only (guaranteed local slots)
+        # Pass 2 — general pool fills remaining slots
+        zip_calls = self._hybrid_search(
+            query_text=query_str,
+            zip_code=query.zip,
+            start=start_date,
+            end=end_date,
+            limit=plan.text_n,
+            source_filter="311",
+            zip_exact_only=True,
+        )
+        remaining_calls = plan.text_n - len(zip_calls)
+        zip_call_ids = {c["doc_id"] for c in zip_calls}
+        general_calls = self._hybrid_search(
+            query_text=query_str,
+            zip_code=query.zip,
+            start=start_date,
+            end=end_date,
+            limit=remaining_calls + 10,
+            source_filter="311",
+            exclude_ids=zip_call_ids,
+        ) if remaining_calls > 0 else []
+        call_docs = zip_calls + general_calls[:remaining_calls]
+        fema_docs = self._hybrid_search(
+            query_text=query_str,
+            zip_code=query.zip,
+            start=start_date,
+            end=end_date,
+            limit=plan.text_n,
+            source_filter="fema",
         )
 
-        tweets = [doc for doc in text_docs if doc.get(
-            "source") == "tweet"][: plan.text_n]
-        calls = [doc for doc in text_docs if doc.get(
-            "source") == "311"][: plan.text_n]
-        fema = [doc for doc in text_docs if doc.get(
-            "source") in {"fema_kb", "claim"}][: plan.text_n]
+        calls = call_docs
+        fema = fema_docs
 
         return RetrievalResult(
             imagery=imagery,
@@ -118,16 +166,41 @@ class HybridTextRetriever:
         )
 
     # ------------------------------------------------------------------
-    def _hybrid_search(self, query_text: str, zip_code: str, start: date, end: date, limit: int) -> List[dict]:
-        allowed_ids = self._filter_doc_ids(zip_code, start, end)
-        if not allowed_ids:
+    def _hybrid_search(
+        self,
+        query_text: str,
+        zip_code: str,
+        start: date,
+        end: date,
+        limit: int,
+        source_filter: Optional[str] = None,
+        gps_only: bool = False,
+        zip_exact_only: bool = False,
+        exclude_ids: Optional[set] = None,
+    ) -> List[dict]:
+        allowed_ids = self._filter_doc_ids(
+            zip_code, start, end,
+            source_filter=source_filter,
+            gps_only=gps_only,
+            zip_exact_only=zip_exact_only,
+        )
+        strict = gps_only or zip_exact_only
+        if not allowed_ids and not strict:
             logger.warning(
                 "Hybrid retriever found no docs in time/zip window; falling back to time-only filter", zip=zip_code)
-            allowed_ids = self._filter_doc_ids(None, start, end)
-        if not allowed_ids:
+            allowed_ids = self._filter_doc_ids(None, start, end, source_filter=source_filter)
+        if not allowed_ids and not strict:
             logger.warning(
                 "Hybrid retriever found no docs in time window; falling back to full corpus", zip=zip_code)
-            allowed_ids = [doc["doc_id"] for doc in self.bm25_docs]
+            allowed_ids = [
+                doc["doc_id"] for doc in self.bm25_docs
+                if source_filter is None or self._match_source(doc.get("source", ""), source_filter)
+            ]
+        if not allowed_ids:
+            return []
+
+        if exclude_ids:
+            allowed_ids = [doc_id for doc_id in allowed_ids if doc_id not in exclude_ids]
         if not allowed_ids:
             return []
 
@@ -150,6 +223,9 @@ class HybridTextRetriever:
             payload = dict(doc.get("payload") or {})
             payload["doc_id"] = doc_id
             payload["source"] = doc.get("source")
+            payload["lat"] = doc.get("lat")
+            payload["lon"] = doc.get("lon")
+            payload["zip"] = doc.get("zip")
             results.append(payload)
             if len(results) >= limit:
                 break
@@ -191,20 +267,41 @@ class HybridTextRetriever:
                 f"Embedding metadata missing model entry: {path}")
         return meta
 
-    def _filter_doc_ids(self, zip_code: Optional[str], start: date, end: date) -> List[str]:
+    def _match_source(self, source: str, source_filter: str) -> bool:
+        """Check if a doc source matches the requested source_filter."""
+        if source_filter == "fema":
+            return source in {"fema_kb", "claim"}
+        return source == source_filter
+
+    def _filter_doc_ids(
+        self,
+        zip_code: Optional[str],
+        start: date,
+        end: date,
+        source_filter: Optional[str] = None,
+        gps_only: bool = False,
+        zip_exact_only: bool = False,
+    ) -> List[str]:
         allowed: List[str] = []
         for doc in self.bm25_docs:
-            if zip_code:
-                doc_zip = str(doc.get("zip") or "")
-                if not doc_zip:
-                    # Allow docs without zip (e.g. tweets) to be retrieved based on text relevance
-                    pass
-                else:
-                    if doc_zip.endswith(".0"):
-                        doc_zip = doc_zip[:-2]
-                    if doc_zip != zip_code:
-                        # logger.debug(f"Skipping doc {doc['doc_id']} with zip {doc_zip} != {zip_code}")
-                        continue
+            if source_filter is not None and not self._match_source(doc.get("source", ""), source_filter):
+                continue
+            doc_zip = str(doc.get("zip") or "")
+            if doc_zip.endswith(".0"):
+                doc_zip = doc_zip[:-2]
+            has_gps = doc.get("lat") is not None and doc.get("lon") is not None
+            if gps_only:
+                # Tweets: require confirmed GPS coordinates at query ZIP
+                if not (has_gps and doc_zip == zip_code):
+                    continue
+            elif zip_exact_only:
+                # 311 calls: require ZIP match (no GPS needed)
+                if doc_zip != zip_code:
+                    continue
+            elif zip_code:
+                # Default: ZIP-matched + no-zip (regional) docs both pass
+                if doc_zip and doc_zip != zip_code:
+                    continue
             ts = doc.get("timestamp_dt")
             if ts is None:
                 continue
