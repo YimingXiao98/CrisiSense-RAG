@@ -63,10 +63,10 @@ x = np.arange(len(models))
 n = len(configs)
 width = 0.22
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 5), sharey=False)
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 9), sharey=False)
 fig.suptitle(
     r"MAE Change Relative to Multimodal Baseline ($\Delta$ pp, $N=110$)",
-    fontsize=14, fontweight="bold", y=1.02,
+    fontsize=14, fontweight="bold",
 )
 
 for j, (cfg, color) in enumerate(zip(configs, config_colors)):
