@@ -137,6 +137,8 @@ class SplitPipelineClient:
         # Stage 1: Text Analysis
         logger.debug(f"Running text analysis for ZIP {zip_code}")
         text_result = self.text_client.analyze(zip_code, time_window, context)
+        if isinstance(text_result, list):
+            text_result = text_result[0] if text_result else {}
 
         # Stage 2: Visual Analysis (if enabled and imagery available)
         # NEW: Pass text summary to guide visual analysis (text-guided visual)
@@ -208,6 +210,8 @@ class SplitPipelineClient:
         This is the original split pipeline behavior.
         """
         text_result = self.text_client.analyze(zip_code, time_window, context)
+        if isinstance(text_result, list):
+            text_result = text_result[0] if text_result else {}
         verified_response = self.verifier.verify(text_result, context)
         self._normalize_response(verified_response)
         return verified_response
