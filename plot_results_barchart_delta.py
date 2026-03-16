@@ -1,8 +1,8 @@
 """
 plot_results_barchart_delta.py
-Figure 3 (alternative): delta MAE relative to Text-Only baseline.
-Negative = improvement, positive = degradation.
-X-axis: 4 models. Bars: Text+Caption, No-Tweets, Multimodal (3 configs vs. baseline).
+Figure 3: delta MAE relative to Multimodal baseline (ablation).
+Positive = degradation from removing modalities. Negative = improvement over full system.
+X-axis: 4 models. Bars: Text-Only, Text+Caption, No-Tweets (3 configs vs. Multimodal baseline).
 """
 import matplotlib.pyplot as plt
 import numpy as np
@@ -44,20 +44,20 @@ raw = {
     },
 }
 
-# ── Delta = config - text_only (index 0 is baseline → always 0) ──────────────
-configs = ["Text+Caption", "No-Tweets", "Multimodal"]  # skip Text-Only (=0)
+# ── Delta = config - multimodal (index 3 is baseline → always 0) ─────────────
+configs = ["Text-Only", "Text+Caption", "No-Tweets"]  # skip Multimodal (=0)
 models  = ["Gemini 2.5 Flash", "Gemini 3 Flash", "Qwen 3.5 397B", "GPT-5-mini"]
 keys    = ["Gemini25", "Gemini3", "Qwen", "GPT"]
 
 delta_ext, delta_dmg = {}, {}
 for k in keys:
-    base_e = raw[k]["extent"][0]
-    base_d = raw[k]["damage"][0]
-    delta_ext[k] = [raw[k]["extent"][i] - base_e for i in range(1, 4)]
-    delta_dmg[k] = [raw[k]["damage"][i] - base_d for i in range(1, 4)]
+    base_e = raw[k]["extent"][3]   # index 3 = Multimodal
+    base_d = raw[k]["damage"][3]
+    delta_ext[k] = [raw[k]["extent"][i] - base_e for i in range(0, 3)]
+    delta_dmg[k] = [raw[k]["damage"][i] - base_d for i in range(0, 3)]
 
 # ── Colors per config ─────────────────────────────────────────────────────────
-config_colors = ["#3498db", "#e67e22", "#e74c3c"]  # blue, orange, red
+config_colors = ["#95a5a6", "#3498db", "#e67e22"]  # gray, blue, orange
 
 x = np.arange(len(models))
 n = len(configs)
@@ -65,7 +65,7 @@ width = 0.22
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 5), sharey=False)
 fig.suptitle(
-    r"MAE Change Relative to Text-Only Baseline ($\Delta$ pp, $N=110$)",
+    r"MAE Change Relative to Multimodal Baseline ($\Delta$ pp, $N=110$)",
     fontsize=14, fontweight="bold", y=1.02,
 )
 
@@ -100,11 +100,11 @@ for j, (cfg, color) in enumerate(zip(configs, config_colors)):
 
 for ax, title in [(ax1, "Flood Extent MAE Change (pp)"),
                   (ax2, "Damage Severity MAE Change (pp)")]:
-    ax.axhline(0, color="black", linewidth=1.2, linestyle="--", label="Text-Only (baseline)")
+    ax.axhline(0, color="black", linewidth=1.2, linestyle="--", label="Multimodal (baseline)")
     ax.set_title(title, fontsize=12, fontweight="bold")
     ax.set_xticks(x)
     ax.set_xticklabels(models, fontsize=11)
-    ax.set_ylabel(r"$\Delta$ MAE vs. Text-Only (pp)", fontsize=11)
+    ax.set_ylabel(r"$\Delta$ MAE vs. Multimodal (pp)", fontsize=11)
     ax.legend(loc="upper left", fontsize=9)
     ax.set_axisbelow(True)
     ax.grid(axis="y", linestyle="--", alpha=0.3)
