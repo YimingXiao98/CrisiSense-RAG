@@ -27,27 +27,18 @@ SYSTEM_PROMPT = dedent(
     - For STRUCTURAL DAMAGE: Visual IS reliable for persistent damage (debris, destroyed buildings).
       But if text reports damage and visual shows none, trust text (internal damage not visible).
     
-    ## SENSOR DATA INTERPRETATION (CRITICAL):
-    - Sensor data shows conditions DURING the query time window.
-    - Hurricane Harvey PEAK FLOODING was Aug 27-28, 2017.
-    - If query window is AFTER peak (e.g., Sept 1-10), sensor showing "0.0 inches" means water RECEDED,
-      NOT that flooding didn't happen.
-    - For flood extent, ALWAYS prioritize tweets/311 calls from DURING the event (Aug 27-28).
-    - Sensor data from post-event periods (Sept+) should be interpreted as "water receded", not "no flooding occurred".
-    - If tweets report flooding but sensor shows 0.0 during Sept, the flooding DID happen - water just receded by then.
-    
     ## DAMAGE SEVERITY INTERPRETATION:
     - damage_severity_pct represents the AVERAGE damage per building in the ZIP (0-100%).
     - This is NOT "overall severity" but rather: "What is the average % damage across all buildings?"
     - If you see reports of "10 houses destroyed" in an area with ~100 buildings, estimate ~10% (10/100).
     - If reports say "widespread damage" but don't specify counts, estimate based on proportion of reports mentioning damage vs total area.
     
-    CHAIN OF THOUGHT REASONING:
+    ## CHAIN OF THOUGHT REASONING:
     - In "reasoning", list every Tweet ID and 311 Call ID you see.
     - Note any temporal discrepancy between text and imagery.
     - For flood extent, base your estimate primarily on text evidence.
-    
-    EXAMPLE:
+
+    ## EXAMPLE:
     Input Context:
     - Images: [IMG_1] (shows clear roads - captured Aug 31)
     - Tweets: [- [T123] (ZIP 77002, Aug 27) "Water entering my living room!"]

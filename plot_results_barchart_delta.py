@@ -66,7 +66,7 @@ width = 0.22
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 9), sharey=False)
 fig.suptitle(
     r"MAE Change Relative to Multimodal Baseline ($\Delta$ pp, $N=110$)",
-    fontsize=14, fontweight="bold",
+    fontsize=16, fontweight="bold",
 )
 
 for j, (cfg, color) in enumerate(zip(configs, config_colors)):
@@ -85,7 +85,7 @@ for j, (cfg, color) in enumerate(zip(configs, config_colors)):
                      xy=(bar.get_x() + bar.get_width() / 2, val),
                      xytext=(0, 4 if val >= 0 else -4),
                      textcoords="offset points",
-                     ha="center", va=va, fontsize=7.5, fontweight="bold")
+                     ha="center", va=va, fontsize=9.5, fontweight="bold")
 
     # Damage panel
     bars = ax2.bar(x + offset, d_dmg, width, label=cfg, color=color,
@@ -96,24 +96,24 @@ for j, (cfg, color) in enumerate(zip(configs, config_colors)):
                      xy=(bar.get_x() + bar.get_width() / 2, val),
                      xytext=(0, 4 if val >= 0 else -4),
                      textcoords="offset points",
-                     ha="center", va=va, fontsize=7.5, fontweight="bold")
+                     ha="center", va=va, fontsize=9.5, fontweight="bold")
 
 for ax, title in [(ax1, "Flood Extent MAE Change (pp)"),
                   (ax2, "Damage Severity MAE Change (pp)")]:
     ax.axhline(0, color="black", linewidth=1.2, linestyle="--", label="Multimodal (baseline)")
-    ax.set_title(title, fontsize=12, fontweight="bold")
+    ax.set_title(title, fontsize=14, fontweight="bold")
     ax.set_xticks(x)
-    ax.set_xticklabels(models, fontsize=11)
-    ax.set_ylabel(r"$\Delta$ MAE vs. Multimodal (pp)", fontsize=11)
-    ax.legend(loc="upper left", fontsize=9)
+    ax.set_xticklabels(models, fontsize=13)
+    ax.set_ylabel(r"$\Delta$ MAE vs. Multimodal (pp)", fontsize=13)
+    ax.legend(loc="upper left", fontsize=11)
     ax.set_axisbelow(True)
     ax.grid(axis="y", linestyle="--", alpha=0.3)
     # Annotate direction
     ymin, ymax = ax.get_ylim()
     ax.text(0.98, 0.04, "← better", transform=ax.transAxes,
-            ha="right", va="bottom", fontsize=9, color="green", style="italic")
+            ha="right", va="bottom", fontsize=11, color="green", style="italic")
     ax.text(0.98, 0.96, "worse →", transform=ax.transAxes,
-            ha="right", va="top", fontsize=9, color="red", style="italic")
+            ha="right", va="top", fontsize=11, color="red", style="italic")
 
 plt.tight_layout()
 save_fig(fig, "results_barchart_delta")
