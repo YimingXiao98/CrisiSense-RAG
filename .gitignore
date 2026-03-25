@@ -141,7 +141,14 @@ generate_comparison_maps.py
 generate_maps.py
 generate_maps_core.py
 plot_results_barchart.py
+plot_results_barchart_delta.py
+generate_coverage_map.py
+generate_residual_plots.py
+copy_actual_exps.py
 project_handoff_summary.md
+CLAUDE.md
+*.tar.gz
+*-this-session-is-being-continued*.txt
 
 # One-off scripts in scripts/
 scripts/compare_*.py
