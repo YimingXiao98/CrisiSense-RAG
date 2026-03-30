@@ -155,10 +155,14 @@ python scripts/run_baseline_experiment.py \
 If you use this code, please cite:
 
 ```bibtex
-@article{crisisenserag2025,
-  title={Multimodal Retrieval-Augmented Generation for Disaster Impact Assessment},
-  author={...},
-  year={2025}
+@misc{xiao2026crisisenseragcrisissensingmultimodal,
+      title={CrisiSense-RAG: Crisis Sensing Multimodal Retrieval-Augmented Generation for Rapid Disaster Impact Assessment}, 
+      author={Yiming Xiao and Kai Yin and Ali Mostafavi},
+      year={2026},
+      eprint={2602.13239},
+      archivePrefix={arXiv},
+      primaryClass={cs.CY},
+      url={https://arxiv.org/abs/2602.13239}, 
 }
 ```
 
